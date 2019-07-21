@@ -20,7 +20,7 @@ class DataXferValidator(wx.PyValidator):
 
     def TransferToWindow(self):
         textCtrl = self.GetWindow()
-        if self.key == 'alert':
+        if self.key in ('alert_s', 'alert_d'):
             textCtrl.SetSelection(self.data.get(self.key, 0))
         else:
             textCtrl.SetValue(self.data.get(self.key, ""))
@@ -29,13 +29,17 @@ class DataXferValidator(wx.PyValidator):
 
     def TransferFromWindow(self):
         textCtrl = self.GetWindow()
-        if self.key == 'alert':
+        if self.key in ('alert_s', 'alert_d'):
             self.data[self.key] = textCtrl.GetSelection()
         elif self.key in ('date', 'time', 'warn', 'msg'):
             self.data[self.key] = textCtrl.GetValue()
             # print "validating data[%s] = '%s'" % (self.key, self.data[self.key]) 
             if self.data[self.key] == '':
-                wx.MessageBox("A required field is empty!", "Error")
+                dlg = wx.MessageDialog(None, "A required field is empty!",
+                        "Error", wx.OK | wx.ICON_ERROR)
+                dlg.SetBackgroundColour(nfcolor)
+                dlg.ShowModal()
+                dlg.Destroy()
                 textCtrl.SetBackgroundColour(bgcolor)
                 textCtrl.SetFocus()
                 textCtrl.Refresh()
@@ -44,8 +48,6 @@ class DataXferValidator(wx.PyValidator):
             self.data[self.key] = textCtrl.GetValue()
 
         return True
-
-
 
 class MyDialog(wx.Dialog):
     def __init__(self, data, type='u'):
@@ -98,7 +100,8 @@ fields, and for date and time substitutions in the message fields. \
         if type in ('u', 't', 'a'):
             omsg_l  = wx.StaticText(self, -1, "Other Message:")
         if type == 'a':
-            alert_l  = wx.StaticText(self, -1, "Alert:")
+            alert_lV  = wx.StaticText(self, -1, "Visual Alert:")
+            alert_lA  = wx.StaticText(self, -1, "Audible Alert:")
 
         date_t  = wx.TextCtrl(self, validator=DataXferValidator(data, "date"))
         self.Bind(wx.EVT_TEXT, self.SetUnsavedChanges, date_t)
@@ -117,16 +120,16 @@ fields, and for date and time substitutions in the message fields. \
             self.Bind(wx.EVT_TEXT, self.SetUnsavedChanges, omsg_t)
 
         if type == 'a':
-            alertList = [
-                'pop-up display plus default sound',
-                'pop-up display',
-                'pop-up display plus spoken message',
-                'spoken message', 
-               ]
-            alert_t = wx.RadioBox(self, -1, "", (20,20), wx.DefaultSize,
-                        alertList, 2, wx.RA_SPECIFY_COLS,
-                        validator=DataXferValidator(data, "alert"))
-            self.Bind(wx.EVT_RADIOBOX, self.SetUnsavedChanges, alert_t)
+            alertVlist = ['None', 'Pop-up Display']
+            alertAlist = ['None', 'Sound', 'Spoken Message']
+            alert_tV = wx.RadioBox(self, -1, "", (20,20), wx.DefaultSize,
+                        alertVlist, 2, wx.RA_SPECIFY_COLS,
+                        validator=DataXferValidator(data, "alert_d"))
+            self.Bind(wx.EVT_RADIOBOX, self.SetUnsavedChanges, alert_tV)
+            alert_tA = wx.RadioBox(self, -1, "", (20,20), wx.DefaultSize,
+                        alertAlist, 3, wx.RA_SPECIFY_COLS,
+                        validator=DataXferValidator(data, "alert_s"))
+            self.Bind(wx.EVT_RADIOBOX, self.SetUnsavedChanges, alert_tA)
 
         # Use standard button IDs
         help = wx.Button(self, wx.ID_HELP)
@@ -158,8 +161,10 @@ fields, and for date and time substitutions in the message fields. \
             fgs.Add(omsg_l, 0, wx.ALIGN_RIGHT)
             fgs.Add(omsg_t, 0, wx.EXPAND)
         if type == 'a':
-            fgs.Add(alert_l, 0, wx.ALIGN_RIGHT)
-            fgs.Add(alert_t, 0, wx.EXPAND)
+            fgs.Add(alert_lV, 0, wx.ALIGN_RIGHT)
+            fgs.Add(alert_tV, 0, wx.EXPAND)
+            fgs.Add(alert_lA, 0, wx.ALIGN_RIGHT)
+            fgs.Add(alert_tA, 0, wx.EXPAND)
 
         fgs.AddGrowableCol(1)
         sizer.Add(fgs, 0, wx.EXPAND|wx.ALL, 5)
@@ -177,7 +182,7 @@ fields, and for date and time substitutions in the message fields. \
 
     def OnCancel(self, event):
         # There will be 1 modification from pasting the selected date
-        if self.UnsavedChanges > 1:
+        if self.UnsavedChanges > 0:
             dlg = wx.MessageDialog(self, "Abandon changes?", "Modified entries", 
                     wx.wx.NO |
                     wx.wx.YES)
@@ -191,7 +196,6 @@ fields, and for date and time substitutions in the message fields. \
 
     def SetUnsavedChanges(self, event):
         self.UnsavedChanges += 1
-        # print "Unsaved changes: %d" % self.UnsavedChanges
 
     def OnHelp(self, event):
         # show the hints page
@@ -210,6 +214,7 @@ if __name__ == '__main__':
 
     data = { "date" : "17 May 2006" }
     dlg = MyDialog(data, type)
+    dlg.UnsavedChanges = -1
     dlg.ShowModal()
     dlg.Destroy()
 

@@ -2,29 +2,53 @@
 # $Id: wxRemAlert.py 14 2006-05-09 12:20:50Z dag $
 import wx
 import sys, os, getopt, datetime, re
-from wxRemConfig import * 
+from wxRemConfig import *
+
+# alert types: old sd -> new t
+types = {'00' : 0,
+         '01' : 1,
+         '10' : 2,
+         '11' : 3,
+         '20' : 4,
+         '21' : 5}
 
 def alert():
-    global alert_sound, alert_display
+    global alert_type, alert_display
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'd:s:')
+        opts, args = getopt.getopt(sys.argv[1:], 'd:s:t:')
     except getopt.GetoptError:
-        print 'options: -d[0,1] -s[0,1,2]'
+        print 'options: -d[0,1] -s[0,1,2] -t[0,1,2,3]'
         sys.exit(2)
 
     # check for command line overrides
+    alert_display = alert_sound = 0
+    alert_display_set = alert_sound_set = alert_type_set = False
     for o, a in opts:
-        if o == "-d":
+        if o == "-t":
+            alert_type = int(a)
+            alert_type_set = True
+        elif o == "-d":
             alert_display = int(a)
+            alert_display_set = True
         elif o == "-s":
             alert_sound = int(a)
+            alert_sound_set = True
+
+    if not alert_type_set:
+        if alert_display_set or alert_sound_set:
+            alert_type = types['%s%s' % (alert_sound, alert_display)]
+        else:
+            # make wave, display the system default
+            alert_type = 3
 
     event_msg = ' '.join(args)
     spoken_msg = "%s " % event_msg
+    if alert_type == 0:
+        sys.exit(0)
 
-    if alert_sound == 1:
+    if alert_type in (2,3):
         os.system("%s %s" % (alert_play, alert_wave))
-    elif alert_sound == 2:
+    elif alert_type in (4,5):
         if event_msg and alert_parsenums:
             # look for three consecutive digits preceeded by a non-digit and
             # followed by either a word boundary or a non-digit
@@ -132,7 +156,7 @@ def alert():
             retCode = dlg.ShowModal()
             dlg.Destroy()
 
-    if alert_display:
+    if alert_type in (1,3,5):
         app = wx.PySimpleApp()
         dlg = wx.MessageDialog(None, "%s" % event_msg, 'wxRemind alert', 
                                 wx.STAY_ON_TOP | wx.OK | wx.ICON_INFORMATION)

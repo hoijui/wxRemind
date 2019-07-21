@@ -107,7 +107,6 @@ class MyFrame(wx.Frame):
                 wx.LC_NO_HEADER | wx.WANTS_CHARS | BORDER )
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected, self.lc) 
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnItemActivated, self.lc) 
-        self.lc.Bind(wx.EVT_SET_FOCUS, self.OnSetFocus)
         self.lc.Bind(wx.EVT_CHAR, self.OnChar)
         self.lc.SetFont(lfont)
         self.lc.SetBackgroundColour(bgcolor)
@@ -122,18 +121,11 @@ class MyFrame(wx.Frame):
         self.lc_id = self.lc.GetId()
 
         # The calendar
-        self.cal = MyCalCtrl(self, -1, wx.DateTime_Now(), size = (-1,-1),
-                style = wx.calendar.CAL_SHOW_HOLIDAYS | wx.WANTS_CHARS |
-                BORDER | wx.calendar.CAL_SEQUENTIAL_MONTH_SELECTION)
+        self.cal = MyCalCtrl(self, -1, wx.DateTime_Now(), 
+                style = wx.calendar.CAL_SHOW_HOLIDAYS 
+                | wx.calendar.CAL_SEQUENTIAL_MONTH_SELECTION
+                | BORDER | wx.WANTS_CHARS )
         self.cal.SetFont(cfont)
-        # Hack to enlarge calendar window in a fontsize dependent way
-        if calsizeadj[0] or calsizeadj[1]:
-            size = self.cal.GetSize() + calsizeadj
-            self.cal.Destroy()
-            self.cal = MyCalCtrl(self, -1, wx.DateTime_Now(), size = size,
-                    style = wx.calendar.CAL_SHOW_HOLIDAYS | wx.WANTS_CHARS |
-                    BORDER | wx.calendar.CAL_SEQUENTIAL_MONTH_SELECTION)
-            self.cal.SetFont(cfont)
         self.cal.SetHeaderColours(headercolor,fcolor)
         self.cal.SetHolidayColours(holidaycolor,fcolor)
         self.Bind(wx.calendar.EVT_CALENDAR_SEL_CHANGED, self.OnCalSelected, 
@@ -173,8 +165,9 @@ class MyFrame(wx.Frame):
         vbox2 = wx.BoxSizer(wx.VERTICAL)
         vbox1.Add(self.datebar, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, 4)
         vbox1.Add(self.lc, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 4)
-        vbox2.Add(self.cal, 0, wx.EXPAND | wx.ALIGN_CENTER |
-                wx.TOP | wx.RIGHT | wx.BOTTOM, 4)
+        vbox2.Add(self.cal, 0, wx.EXPAND 
+                # | wx.ALIGN_CENTER 
+                | wx.TOP | wx.RIGHT | wx.BOTTOM, 4)
         vbox2.Add(self.tdy, 0, wx.EXPAND | wx.ALIGN_CENTER_VERTICAL | 
                 wx.TOP | wx.RIGHT | wx.BOTTOM, 4)
         vbox2.Add(self.clk, 0, wx.EXPAND | wx.ALIGN_CENTER_VERTICAL |
@@ -281,6 +274,7 @@ class MyFrame(wx.Frame):
             line = int(self.data[self.currentItem][5])
             reminder = linecache.getline(file,line).strip()
             self.detailbar.SetLabel(reminder)
+        self.Focus('lc')
 
     def OnAbout(self, event):
         # show the about page
@@ -320,6 +314,7 @@ class MyFrame(wx.Frame):
                 self.Focus('cal')
             elif curr_id == self.lc_id:
                 self.Focus('lc')
+        event.Skip()
 
     def Focus(self, w=''):
         # Called with an argument sets appropriate focus, else toggles focus.
@@ -448,13 +443,27 @@ class MyFrame(wx.Frame):
             event.Skip()
 
     def newEvent(self, type):
-        # Create a new event, append it to the reminders file and open the
-        # editor on the last line of this file.
+        # Create a new event and append it to the reminders file
+        # count changes made to data before opening dialog
+        changes = 0 
         y,m,d = map(int, self.selday)
         date = datetime.date(y, m, d)
         datefmt = "%d %s" % (d, date.strftime("%b %Y"))
         data = { "date" : datefmt }
+        changes += 1
+        if type == 'a':
+            if alert_sound in (0,1,2):
+                # this change doesn't affect the relevant count
+                data["alert_s"] = int(alert_sound)
+            if alert_display in (0,1):
+                # this change doesn't affect the relevant count
+                data["alert_d"] = int(alert_display)
+            if alert_other_message:
+                data["omsg"] = alert_other_message
+                changes += 1
+
         dlg = wxRemEdit.MyDialog(data, type)
+        dlg.UnsavedChanges -= changes
         dlg.ShowModal()
         dlg.Destroy()
         if data.has_key('msg') and data['msg'] != '':
@@ -469,15 +478,7 @@ class MyFrame(wx.Frame):
                 data['msg'] = '%%"%s%%"' % data['msg']
             if type == 'a':
                 # convert radio button index to switch string 
-                s = int(data['alert'])
-                if s == 0:
-                    data['alert'] = '-d1 -s1'
-                elif s == 1:
-                    data['alert'] = '-d1 -s0'
-                elif s == 2:
-                    data['alert'] = '-d1 -s2'
-                else:
-                    data['alert'] = '-d0 -s2'
+                data['alert'] = '-d%s -s%s' % (data['alert_d'], data['alert_s'])
                 rem = 'REM %(date)s AT %(time)s %(dur)s RUN wxremalert ' % data
                 rem += '%(alert)s %(msg)s%%' % data
             elif type == 'u':

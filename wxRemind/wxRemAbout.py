@@ -45,9 +45,9 @@ GNU General Public License for more details.</p>
 </table>
 </center></p>
 
-<p><center>
-Copyright (c) 2006 Daniel A. Graham &lt;daniel.graham@duke.edu&gt;
-</center></p>
+<p> Copyright (c) 2006 Daniel A. Graham &lt;daniel.graham@duke.edu&gt;.
+Special thanks to David Skoll (remind), Paul Pelzl (wyrd) and Robin Dunn
+(wxPython).</p>
 
 </small>
 </body>
@@ -56,7 +56,7 @@ Copyright (c) 2006 Daniel A. Graham &lt;daniel.graham@duke.edu&gt;
 
     def __init__(self, parent):
         wx.Dialog.__init__(self, parent, -1, 'About wxRemind',
-                          size=(550, 610) )
+                          size=(550, 630) )
         html = wx.html.HtmlWindow(self)
         html.SetPage(self.text)
         html.SetBackgroundColour(fcolor)

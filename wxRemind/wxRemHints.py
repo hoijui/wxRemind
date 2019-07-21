@@ -31,7 +31,7 @@ then you can press 'e' to bring up the editor with the cursor at the new
 reminder. Pressing 'e' will even bring up a 'broken' reminder that doesn't show
 up in the events list.</small>
 
-<p><b>Date Strings</b></p>
+<p><b>Date Field</b></p>
 <small>
 <center>
 <table cols="2" border="0">
@@ -53,6 +53,88 @@ up in the events list.</small>
 </center>
 </small>
 
+
+<p><b>Time Field</b></p>
+<br>
+<small>
+
+Must begin with a 24 hour time in the format HH:MM. Can optionally be followed
+by + and * strings.
+
+<center>
+<table cols="2" border="0">
+<tr><th>Time String</th><th align="left">Triggers</th></tr>
+<tr><th>13:00</th><td>1:00PM</td></tr>
+<tr><th>10:00 +45 *20</th><td>9:15AM, 9:35AM, 9:55AM and 10:00AM</td></tr>
+</table>
+</center>
+</small>
+</p>
+
+<p><b>Duration Field</b></p>
+<br>
+<small>
+Must specify hours and minutes in the format H:MM.
+<center>
+<table cols="2" border="0">
+<tr><th>Duration String</th><th align="left">Ends at start time plus</th></tr>
+<tr><th>1:15</th><td>75 minutes</td></tr>
+<tr><th>0:15</th><td>15 minutes</td></tr>
+</table>
+</center>
+</small>
+
+<p><b>Message / Other Message Fields</b></p>
+<small>
+<br>
+'Message' is a required field for all types of reminders. 'Other Message' is
+optional and, if present, will not appear in wxRemind's event list or other
+remind "calendar" uses, but will appear in normal, non-calendar uses and thus
+in alerts. For example,
+
+<center>
+<table>
+<tr><td>Message: Dentist appointment</td></tr>
+<tr><td>Other Message: %%1</td></tr>
+</table>
+</center>
+
+<br>would appear on the relevant event list as <em>Dentist appointment</em> but
+the message for an alert triggered 20 minutes before the appointment would be
+<em>Dentist appointment 20 minutes from now</em>. See below for the use of %%1
+and other time and date substitution strings. Technically, if 'Other Message'
+were empty, the the reminder message would simply be <em>Dentist
+appointment%%</em>.  The addition of the 'Other Message', on the other hand,
+yields the message <em>%%"Dentist appointment%%" %%1%%</em>.
+</small>
+
+<p><b>Message Fields Date Substitution Strings</b></p>
+<small>
+<br>
+<center>
+<table cols="2" border="0">
+<tr><th>String</th><th align="left">Replaced by</th></tr>
+<tr><th>%%a</th><td>"on weekday, day month year", "tomorrow", "today", etc.</td></tr>
+<tr><th>%%b</th><td>"in n days' time", "tomorrow", "today", etc.</td></tr>
+</table>
+</center>
+<p>Also %%c ... %%z &mdash; see the remind man page.</p>
+</small>
+
+<p><b>Message Fields Time Substitution Strings</b></p>
+<small>
+<br>
+<center>
+<table cols="2" border="0">
+<tr><th>String</th><th align="left">Replaced by</th></tr>
+<tr><th>%%1</th><td>"now", "m minutes from now", "m minutes ago", etc.</td></tr>
+<tr><th>%%2</th><td>"at hh:mmAM" or "at hh:mmPM"</td></tr>
+<tr><th>%%3</th><td>"at hh:mm" in 24 hour format</td></tr>
+</table>
+</center>
+
+<p>Also %%4 ... %%0 &mdash; see the remind man page.</p>
+</small>
 
 <p><b>Floating Reminders</b></p>
 <small>
@@ -92,71 +174,53 @@ Date String: 15 Apr 2006
 </center>
 </small>
 
-<p><b>Time Strings</b></p>
-<br>
+<p><b>Alert Reminders</b></p>
 <small>
-<table cols="2" border="0">
-<tr><th>Time String</th><th align="left">Triggers</th></tr>
-<tr><th>13:00</th><td>1:00PM</td></tr>
-<tr><th>10:00 +45 *20</th><td>9:15AM, 9:35AM, 9:55AM and 10:00AM</td></tr>
+<br>
+
+Are exactly like timed reminders but use 'RUN' rather than 'MSG' in the
+reminder to invoke Remind (running in the background) to call wxremalert.  Thus
+alerts will be triggered if Remind is running <em>whether or not wxRemind is
+running</em>.  For example, with the following settings in ~/.wxremindrc
+
+<table>
+<tr><td>&nbsp;&nbsp;alert_display = 1</td></tr>
+<tr><td>&nbsp;&nbsp;alert_sound = 2</td></tr>
+<tr><td>&nbsp;&nbsp;alert_greeting = 1</td></tr>
+<tr><td>&nbsp;&nbsp;alert_whom = 'Dan'</td></tr> 
+<tr><td>&nbsp;&nbsp;alert_parsenums = 1</td></tr>
+<tr><td>&nbsp;&nbsp;alert_other_message = '%%1'</td></tr>
 </table>
-</small>
-</p>
-
-<p><b>Duration Strings</b></p>
-<br>
-<small>
-<table cols="2" border="0">
-<tr><th>Duration String</th><th align="left">Ends at start time plus</th></tr>
-<tr><th>1:15</th><td>75 minutes</td></tr>
-<tr><th>0:15</th><td>15 minutes</td></tr>
+a new alert reminder created with April 11, 2006 selected on the calendar
+would initially have the following entries:
+<table>
+<tr><td>&nbsp;&nbsp;Date: 11 Apr 2006</td></tr>
+<tr><td>&nbsp;&nbsp;Time:</td></tr>
+<tr><td>&nbsp;&nbsp;Duration:</td></tr>
+<tr><td>&nbsp;&nbsp;Message:</td></tr>
+<tr><td>&nbsp;&nbsp;Other Message: %%1</td></tr>
+<tr><td>&nbsp;&nbsp;Visual Alert: 2nd button (Pop-up Display) checked</td></tr>
+<tr><td>&nbsp;&nbsp;Audible Alert: 3rd button (Spoken Message) checked</td></tr>
 </table>
-</small>
-
-<p><b>Message</b> and <b>Other Message</b></p>
-<small>
-<br>
-'Message' is a required field for all types of reminders. 'Other Message' is
-optional and, if present, will not appear in wxRemind's event list or other
-remind "calendar" uses, but will appear in normal, non-calendar uses and thus
-in alerts. For example,<br>
-
-<br>Message: Dentist appointment
-<br>Other Message: %%1
-
-<br>would appear on the relevant event list as <em>Dentist appointment</em> but
-the message for an alert triggered 20 minutes before the appointment would be
-<em>Dentist appointment 20 minutes from now</em>. See below for the use of %%1
-and other time and date substitution strings. Technically, if 'Other Message'
-were empty, the the reminder message would simply be <em>Dentist
-appointment%%</em>.  The addition of the 'Other Message', on the other hand,
-yields the message <em>%%"Dentist appointment%%" %%1%%</em>.
-</small>
-
-<p><b>Date Message Substitution Strings</b></p>
-<small>
-<br>
-<table cols="2" border="0">
-<tr><th>String</th><th align="left">Replaced by</th></tr>
-<tr><th>%%a</th><td>"on weekday, day month year", "tomorrow", "today", etc.</td></tr>
-<tr><th>%%b</th><td>"in n days' time", "tomorrow", "today", etc.</td></tr>
+After entering '10:50 +5' for Time, '1:15' for Duration and 'Economics 201'
+for Message, the resulting reminder would be
+<table>
+<tr><td>REM 11 Apr 2006 AT 10:50 +5 DUR 1:15 RUN wxremalert -d1 -s2 %%"Economics 201%%" %%1%%</td></tr>
+</table>
+The calendar for Apr 11 would then display
+<table>
+<tr><td>10:50AM - 12:05PM  Economics 201</td></tr>
+</table>
+and, at 10:45 on Apr 11 the following message would be spoken
+<table>
+<tr><td>"Good morning, Dan. The time is ten forty-five. Economics two oh one five
+minutes from now."</td></tr>
+</table>
+and later, at 10:50:
+<table>
+<tr><td>"Good morning, Dan. The time is ten fifty. Economics two oh one now."</td></tr>
 </table>
 
-<p>Also %%c ... %%z &mdash; see the remind man page.</p>
-</small>
-
-<p><b>Time Message Substitution Strings</b></p>
-<small>
-<br>
-<table cols="2" border="0">
-<tr><th>String</th><th align="left">Replaced by</th></tr>
-<tr><th>%%1</th><td>"now", "m minutes from now", "m minutes ago", etc.</td></tr>
-<tr><th>%%2</th><td>"at hh:mmAM" or "at hh:mmPM"</td></tr>
-<tr><th>%%3</th><td>"at hh:mm" in 24 hour format</td></tr>
-</table>
-
-<p>Also %%4 ... %%0 &mdash; see the remind man page.</p>
-<p>
 </small>
 </body>
 </html>
@@ -166,7 +230,7 @@ class Hints(wx.Dialog):
     def __init__(self, parent):
         wx.Dialog.__init__(self, parent, -1, 
                 'wxRemind: Hints for creating reminders', 
-                size=(600, 700))
+                size=(620, 700))
         html = wx.html.HtmlWindow(self)
         html.SetPage(msg)
         html.SetBackgroundColour(fcolor)

@@ -65,22 +65,37 @@ alert_whom = ''
 # Why course numbers are spoken this way is a mystery to me.
 alert_parsenums = 1
 
+# The string provided for alert_other_message will be inserted in the 'Other
+# Message' field when a new alert reminder is created. Such a message will not
+# appear on the calendar but will be appended to 'Message' for alerts. 
+alert_other_message = '%1'
+
 # For example, with 
 #   alert_display = 1
-#   alert_sound = 1
+#   alert_sound = 2
 #   alert_greeting = 1
 #   alert_whom = 'Dan' 
-# and reminder:
-#   REM 11 Apr 2006 AT 10:50 +5 DUR 1:15 RUN wxremalert -d0 -s2 %"Economics 201%" %1%
-# the calendar for Apr 11 would display
+#   alert_parsenums = 1
+#   alert_other_message = '%1'
+# a new alert reminder created with April 11, 2006 selected on the calendar
+# would initially have the following entries:
+#   Date: 11 Apr 2006
+#   Time:
+#   Duration:
+#   Message:
+#   Other Message: %1
+#   Visual Alert: 2nd button (Pop-up Display) checked
+#   Audible Alert: 3rd button (Spoken Message) checked
+# After entering '10:50 +5' for Time, '1:15' for Duration and 'Economics 201'
+# for Message, the resulting reminder would be
+#   REM 11 Apr 2006 AT 10:50 +5 DUR 1:15 RUN wxremalert -d1 -s2 %"Economics 201%" %1%
+# The calendar for Apr 11 would then display
 #   10:50AM - 12:05PM  Economics 201
-# Then, at 10:45 on Apr 11 the following message would be spoken (-s2 overrides
-# the default alert_sound) but not displayed (-d0 overrides the default
-# alert_display):
+# and, at 10:45 on Apr 11 the following message would be spoken
 #   "Good morning, Dan. The time is ten forty-five. Economics two oh one five
 #    minutes from now."
-# and at 10:50 the the following message would be spoken:
-#   "Good morning, Dan. The time is ten fifty. Economics two oh one now."s
+# and later, at 10:50:
+#   "Good morning, Dan. The time is ten fifty. Economics two oh one now."
 
 # FONTSIZES
 # The base fontsize

@@ -1,6 +1,6 @@
                                     wxRemind
 
-   version 0.6.11 - 2006-06-01
+   version 0.6.14 - 2006-06-03
 
    wxRemind is a graphical front-end to [1]Remind, a remarkably sophisticated
    calendar and alarm system. wxRemind is similar to [2]Wyrd but is based on
@@ -8,11 +8,11 @@
    event list suitable for visualizing your schedule at a glance. Dates and
    associated events can be quickly selected either with the mouse or cursor
    keys, and dates in the calendar are color coded to reflect the total
-   duration of scheduled events. wxRemind integrates with an external editor
-   of your choice to make editing of reminder files more efficient, provides
-   hotkeys to quickly access the most common Remind options, allows popup,
-   sound and/or spoken alerts and can display a postscript calendar of the
-   selected month suitable for printing.
+   duration of scheduled events. wxRemind provides an internal editor or
+   integrates with an external editor of your choice to make editing of
+   reminder files more efficient, provides hotkeys to quickly access the most
+   common Remind options, allows popup, sound and/or spoken alerts and can
+   display a postscript calendar of the selected month suitable for printing.
 
   Requirements
 

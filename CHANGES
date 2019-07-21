@@ -1,3 +1,30 @@
+0.6.14
+
+    Fixed bug.  Calendar month change buttons did not align with
+    mouse click areas due to resizing of calendar.
+
+0.6.13
+
+    Rearranged and edited 'hints' and added section on alert
+    reminders.
+
+    Changed new alert dialog to have separate radio boxes for
+    display and sound.  When this dialog is opened, these buttons
+    are set corresponding to the defaults for alert_display and
+    alert_sound. 
+
+    Also enabled setting 'Other Message' default .wxremindrc with
+    this value inserted when a new alert dialog is opened.
+
+    Changed MessageBox to MessageDialog in wxRemEdit.py's error
+    dialogs to accomodate background color settings.
+
+0.6.12
+
+    Fixed list focus so that a mouse click on an event when the
+    calendar has focus, selects the event and switches the focus to
+    the event list.
+
 0.6.11
 
     New reminder dialogs now invoke an 'Abandon changes?' dialog prior
