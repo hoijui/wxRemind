@@ -84,14 +84,13 @@ class MyFrame(wx.Frame):
         self.SetBackgroundColour(bgcolor)
 
         self.datebar = wx.TextCtrl(self, -1, "DateBar", size=(-1,-1), 
-                style = BORDER | wx.TE_CENTRE)
+                style = BORDER | wx.TE_CENTRE )
         self.datebar.SetBackgroundColour(nfcolor)
         self.datebar.SetFont(dfont)
 
         # The bottom (selected event details) bar
         self.detailbar = wx.StaticText(self, -1, "", size=(-1,-1),
                 style = wx.NO_BORDER | wx.ST_NO_AUTORESIZE)
-        # self.detailbar.SetBackgroundColour(bgcolor)
         self.detailbar.SetFont(sfont)
 
         # The today button
@@ -145,13 +144,17 @@ class MyFrame(wx.Frame):
 
         # The analog clock
         self.clk = MyClock(self, size=(clocksize,clocksize), 
-                hoursStyle=ac.TICKS_SQUARE, clockStyle=ac.SHOW_HOURS_TICKS| 
-                ac.SHOW_HOURS_HAND | ac.SHOW_MINUTES_HAND| ac.SHOW_SECONDS_HAND)
+                hoursStyle=ac.TICKS_CIRCLE, 
+                clockStyle=ac.SHOW_HOURS_TICKS | 
+                ac.SHOW_HOURS_HAND | ac.SHOW_MINUTES_HAND | 
+                ac.SHOW_SECONDS_HAND)
         self.clk.SetTickSize(16)
-        self.clk.SetTickFillColour(holidaycolor)
+        self.clk.SetTickFillColour(handcolor)
+        # self.clk.SetShadowColour('BLACK')
+        self.clk.SetTickBorderColour('BLACK')
         self.clk.SetHandFillColour(handcolor)
+        self.clk.SetHandBorderColour('BLACK')
         self.clk.SetFaceBorderColour(bgcolor)
-        self.clk.SetHandBorderColour(handcolor)
         self.clk.SetBackgroundColour(bgcolor)
         self.clk.SetFaceFillColour(bgcolor)
 
@@ -254,9 +257,12 @@ class MyFrame(wx.Frame):
             rephash['f'] = self.data[self.currentItem][4]
             rephash['n'] = self.data[self.currentItem][5]
             if editor == '':
+                changed = False
                 dlg = wxRemEditor.EditWindow(rephash['f'], rephash['n'])
-                dlg.ShowModal()
+                changed = dlg.ShowModal()
                 dlg.Destroy()
+                if changed:
+                    self.Refresh()
             else:
                 editlist = (editold % rephash).split()
                 retval = os.spawnv(os.P_WAIT, editor, editlist)
@@ -264,7 +270,8 @@ class MyFrame(wx.Frame):
                     self.infoMessage(
             'Attempt to start editor %s failed. Check setting in ~/.wxremindrc.' \
                     % editor, 'Error')
-            self.Refresh()
+                else:
+                    self.Refresh()
 
     def OnItemSelected(self, event):
         # Show the relevant reminder in the status bar.
@@ -292,7 +299,6 @@ class MyFrame(wx.Frame):
         dlg = Hints(self)
         dlg.ShowModal()
         dlg.Destroy()
-
 
     def OnMonth(self):
         # show the postscript calendar for the month
@@ -396,7 +402,10 @@ class MyFrame(wx.Frame):
             self.lc.SetStringItem(index, 2, self.data[i][2])
             self.lc.SetStringItem(index, 3, self.data[i][3])
             self.lc.SetItemData(index, i)
-        self.datebar.SetValue(self.FormatDate(y,m,d))
+        if date == datetime.date.today():
+            self.datebar.SetValue("%s [today]" % self.FormatDate(y,m,d))
+        else:
+            self.datebar.SetValue(self.FormatDate(y,m,d))
         self.Focus('cal')
         self.detailbar.SetLabel(sb_string)
 
@@ -437,7 +446,6 @@ class MyFrame(wx.Frame):
             self.OnAbout(event)
         else:
             event.Skip()
-
 
     def newEvent(self, type):
         # Create a new event, append it to the reminders file and open the
@@ -496,8 +504,6 @@ class MyFrame(wx.Frame):
                 remwrite = open(reminders, 'w')
                 remwrite.writelines(remlines)
                 remwrite.close()
-                # cmd = "echo '%s' >> %s" % (rem, reminders)
-                # os.system(cmd)
                 self.Refresh()
 
     def Edit(self,evt):
@@ -506,8 +512,10 @@ class MyFrame(wx.Frame):
         rephash['n'] = -1
         if editor == '':
             dlg = wxRemEditor.EditWindow(rephash['f'], rephash['n'])
-            dlg.ShowModal()
+            changed = dlg.ShowModal()
             dlg.Destroy()
+            if changed:
+                self.Refresh()
         else:
             editlist = (editnew % rephash).split()
             retval = os.spawnv(os.P_WAIT, editor, editlist)
@@ -515,7 +523,8 @@ class MyFrame(wx.Frame):
                 self.infoMessage(
     "Unable to edit using:\n\n'%s'\n\nCheck setting in ~/.wxremindrc." \
                 % editor, 'Error', wx.ICON_ERROR)
-        self.Refresh() 
+            else:
+                self.Refresh() 
 
     def Refresh(self):
         Data.getMonths()

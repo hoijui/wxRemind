@@ -1,3 +1,19 @@
+0.6.5
+
+    Minor cosmetic changes to analog clock. Fill color for hands and
+    tick marks now set by colorfamily setting. Changed tick marks to
+    circles and added black border color to hands and tick marks.
+
+0.6.4 
+
+    Exiting internal editor now prompts for confirmation if there
+    are unsaved changes. Internal editor now returns True if the
+    file has been modified and the changes saved and False
+    otherwise. A refresh is only done if true.
+
+    Added [today] to today's datebar. Minor fixes for wxRemEditor's
+    buttons and tooltips.
+
 0.6.0
 
     Added a simple, internal editor as the default for editing

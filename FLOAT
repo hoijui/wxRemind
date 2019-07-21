@@ -65,10 +65,10 @@ ELSE
 
     # This calsuffix is used by wxRemind
     FSET calsuffix(x) iif(0 > x, "", \
-    998 >= x, " (" + (1000-x) + " days ago)", \
+    998 >= x, " (" + (1000-x) + "  days ago)", \
     999 >= x, " (yesterday)", \
-    1000 >= x, " (today)", \
-    1001 >= x, " (tomorrow)", \
+    1000 >= x, " (today) ", \
+    1001 >= x, " (tomorrow)", \ 
     2000 >= x, " (in " + (x - 1000) + " days)", "")
 ENDIF
 # vim: ft=remind

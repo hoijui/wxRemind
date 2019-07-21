@@ -28,7 +28,7 @@ wxRemClassifiers = [
 
 setup(
     name = "wxRemind",
-    version = "0.6.0",
+    version = "0.6.5",
     packages = find_packages(),
     scripts = ['wxremdata', 'wxremalert', 'wxremind', 'wxremsetup'],
     author = "Daniel A. Graham",

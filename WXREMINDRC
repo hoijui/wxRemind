@@ -105,13 +105,9 @@ busy4 = (300, 'RED')
 # Time to assign to events with no duration in computing day event totals:
 zerominutes = 15
 
-# for the analog clock hands
-handcolor = 'FIREBRICK'
-
 # for the calendar
 holidaycolor = 'BLACK'
 headercolor = 'NAVYBLUE'
-# headercolor = 'FIREBRICK'
 
 # BACKGROUND COLORS
 # bgcolor: The general background color.
@@ -122,9 +118,10 @@ headercolor = 'NAVYBLUE'
 
 # There are two ways of specifying these background colors. The first is simply
 # to specify these colors directly, e.g., 
-# bgcolor = "GRAY90"
-# nfcolor = "GRAY94"
-# fcolor  = "GRAY99"
+# handcolor = 'GRAY50'
+# bgcolor   = "GRAY90"
+# nfcolor   = "GRAY94"
+# fcolor    = "GRAY99"
 
 # The second way is to specify a color 'family' from one of the 'numbered'
 # color families supported by python. Here is a partial list:
@@ -138,13 +135,14 @@ headercolor = 'NAVYBLUE'
 # 'IVORY2', 'IVORY3' and 'IVORY4'. Simply setting
 #    colorfamily = "IVORY"
 # has exactly the same effect as setting
-#    bgcolor = "IVORY3"
-#    nfcolor = "IVORY2"
-#    fcolor  = "IVORY1"
-# The advantage of the family approach is that the selected colors
-# automatically blend well and help indentify the window with the focus. 
+#    handcolor = "IVORY4"
+#    bgcolor   = "IVORY3"
+#    nfcolor   = "IVORY2"
+#    fcolor    = "IVORY1"
+# and, in fact, will override any individual color settings.
 
 colorfamily = "IVORY"
+
 
 # borders: sunken (-1), flat (0) or raised (1)
 # event and calendar borders

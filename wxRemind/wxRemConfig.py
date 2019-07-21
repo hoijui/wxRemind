@@ -105,15 +105,13 @@ busy4 = (300, 'RED')
 # Time to assign to events with no duration in computing day event totals:
 zerominutes = 15
 
-# for the analog clock hands
-handcolor = 'FIREBRICK'
-
 # for the calendar
 holidaycolor = 'BLACK'
 headercolor = 'NAVYBLUE'
 # headercolor = 'FIREBRICK'
 
 # BACKGROUND COLORS
+# handcolor: fill color for the analog clock hands and tick marks 
 # bgcolor: The general background color.
 # nfcolor: The background color for the event list and calendar, whichever has
 # the focus.
@@ -122,9 +120,10 @@ headercolor = 'NAVYBLUE'
 
 # There are two ways of specifying these background colors. The first is simply
 # to specify these colors directly, e.g., 
-# bgcolor = "GRAY90"
-# nfcolor = "GRAY94"
-# fcolor  = "GRAY99"
+# handcolor = 'GRAY50'
+# bgcolor   = "GRAY90"
+# nfcolor   = "GRAY94"
+# fcolor    = "GRAY99"
 # The second way is to specify a color 'family' from one of the 'numbered'
 # color families supported by python. Here is a partial list:
 #    "AZURE" "BISQUE" "CORNSILK" "DARKOLIVEGREEN" "DARKSEAGREEN" "HONEYDEW"
@@ -135,11 +134,11 @@ headercolor = 'NAVYBLUE'
 # 'IVORY2', 'IVORY3' and 'IVORY4'. Simply setting
 #    colorfamily = "IVORY"
 # has exactly the same effect as setting
-#    bgcolor = "IVORY3"
-#    nfcolor = "IVORY2"
-#    fcolor  = "IVORY1"
-# The advantage of the family approach is that the selected colors
-# automatically blend well and help indentify the window with the focus. 
+#    handcolor = 'IVORY4'
+#    bgcolor   = "IVORY3"
+#    nfcolor   = "IVORY2"
+#    fcolor    = "IVORY1"
+# and, in fact, will override any individual color settings.
 
 # borders: sunken (-1), flat (0) or raised (1)
 # event and calendar borders
@@ -159,9 +158,10 @@ import wx
 
 # Set the default color family
 colorfamily = "IVORY"
-fcolor  = "%s1" % colorfamily
-nfcolor = "%s2" % colorfamily
-bgcolor = "%s3" % colorfamily
+fcolor    = "%s1" % colorfamily
+nfcolor   = "%s2" % colorfamily
+bgcolor   = "%s3" % colorfamily
+handcolor = "%s4" % colorfamily
 defcolfam = colorfamily
 
 from os.path import expanduser, isfile
@@ -177,9 +177,10 @@ if isfile(wxremindrc):
     execfile(wxremindrc)
     if colorfamily != defcolfam:
         # user picked a new color family
-        fcolor  = "%s1" % colorfamily
-        nfcolor = "%s2" % colorfamily
-        bgcolor = "%s3" % colorfamily
+        fcolor    = "%s1" % colorfamily
+        nfcolor   = "%s2" % colorfamily
+        bgcolor   = "%s3" % colorfamily
+        handcolor = "%s4" % colorfamily
     msg += 'Using custom settings from ~/.wxremindrc.' 
     reminders = expanduser(reminders)
     if reminders != default_reminders:
@@ -204,12 +205,12 @@ else:
 # expand ~ in the reminders file
 error = 0
 if not isfile(reminders):
-    # trouble, we can't find the reminders file
+    # fatal, we can't find the reminders file
     error = 1
     msg += "\nCannot find the reminders file '%s'!" % reminders
     msg += rmsg
 if editor and not isfile(editor):
-    # trouble, we can't find the editor
+    # fatal, we can't find the custom editor
     error = 1
     msg += "\nCannot find the custom editor '%s'!" % editor
     msg += emsg
@@ -223,7 +224,7 @@ if error:
     dlg.Destroy()
     raise message
 
-# set the hex version of bgcolor
+# set the hex version of bgcolor for the html page headers
 app = wx.App()
 cdb = wx.ColourDatabase()
 cobj = cdb.FindColour(bgcolor)
