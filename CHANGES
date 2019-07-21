@@ -1,3 +1,46 @@
+0.6.0
+
+    Added a simple, internal editor as the default for editing
+    existing reminders.  Opens the reminders file at revevant line
+    and highlights the line.
+
+    The interal editor means that it is no longer necessary to
+    create ~/.wxremindrc unless 
+
+        1. you don't want to use the internal editor
+
+        2. your reminders file is not the default ~/.reminders
+
+        3. you want to customize colors or other settings
+
+    Thus wxremind can now be run 'out of the box' with a default
+    setup. (Save for including FLOAT in your reminders file.)
+
+    Added content to the hints page.
+
+    Stopped automatically calling the editor after creating a new
+    event since it's usually unnecessary and since it's easy to
+    press 'e' and bring up the editor on the just added reminder.
+
+    New events are now appended to the reminder file using python
+    rather than by the 'echo rem >> reminders' hack.  First a backup
+    is made of the existing reminders file (reminders.bak), then a
+    '\n' is added to the last the existing reminders if necessary
+    and finally the new reminder is appended.
+
+    Better configuration startup checks and more informative error
+    messages.
+
+0.5.5
+
+    Made OK the default button in various dialogs so that they close
+    on pressing ENTER.
+
+0.5.4
+
+    Improved checks for existence of ~/.wxremindrc, reminders and
+    editor. Calls to editor that fail now produce alerts.
+
 0.5.0
 
     Significant cosmetic improvements.

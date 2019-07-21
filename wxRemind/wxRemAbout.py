@@ -58,6 +58,7 @@ Copyright (c) 2006 Daniel A. Graham &lt;daniel.graham@duke.edu&gt;
         html.SetPage(self.text)
         html.SetBackgroundColour(fcolor)
         button = wx.Button(self, wx.ID_OK, "OK")
+        button.SetDefault()
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(html, 1, wx.EXPAND|wx.ALL, 5)
         sizer.Add(button, 0, wx.ALIGN_CENTER|wx.ALL, 5)

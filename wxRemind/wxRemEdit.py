@@ -35,7 +35,7 @@ class DataXferValidator(wx.PyValidator):
             # print "validating data[%s] = '%s'" % (self.key, self.data[self.key]) 
             if self.data[self.key] == '':
                 wx.MessageBox("A required field is empty!", "Error")
-                textCtrl.SetBackgroundColour("yellow")
+                textCtrl.SetBackgroundColour(bgcolor)
                 textCtrl.SetFocus()
                 textCtrl.Refresh()
                 return False

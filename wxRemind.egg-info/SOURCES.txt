@@ -17,6 +17,7 @@ wxRemind/wxRemAlert.py
 wxRemind/wxRemConfig.py
 wxRemind/wxRemData.py
 wxRemind/wxRemEdit.py
+wxRemind/wxRemEditor.py
 wxRemind/wxRemHelp.py
 wxRemind/wxRemHints.py
 wxRemind/wxRemSplash.py

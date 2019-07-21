@@ -2,7 +2,7 @@
 (revname, revnumber, revdate, revtime) = \
 "$Id: wxRemind.py 6 2006-05-08 14:52:05Z dag $".split()[1:5]
 
-import os
+import os, shutil
 import wx
 import wx.calendar
 import datetime
@@ -16,6 +16,11 @@ import wxRemEdit
 
 # CONFIGURATION
 from wxRemConfig import *
+if editor == '':
+    import wxRemEditor
+
+reminders_backup = "%s.bak" % reminders
+
 if ec_border == -1:
     BORDER = wx.SUNKEN_BORDER
 elif ec_border == 0:
@@ -36,8 +41,6 @@ sb_string = "Press F1 for information about wxRemind or ? for help."
 # Prepare the replacment hash for later updating.
 rephash = {'e' : editor, 'f' : None, 'n' : None, 
     'y' : None, 'm' : None, 'd' : None}
-# Later when editold is called, for example, '%(e)s' will be replaced by
-# rephash['e'], '%(f)s' by rephash['f'] and so forth.
 
 import wxRemData
 Data = wxRemData.RemData()
@@ -69,8 +72,6 @@ class MyFrame(wx.Frame):
         fontfam = wx.DEFAULT
         bfont = wx.Font(basefontsize + buttonfontadj, fontfam, 
                 wx.NORMAL, wx.NORMAL)
-        # lfont = wx.Font(listfontsize, wx.TELETYPE, wx.NORMAL, wx.NORMAL, 
-                # faceName=listfontfacename)
         lfont = wx.Font(basefontsize + listfontadj, fontfam, 
                 wx.NORMAL, wx.NORMAL)
         dfont = wx.Font(basefontsize + datefontadj, fontfam,
@@ -79,13 +80,9 @@ class MyFrame(wx.Frame):
                 wx.NORMAL, wx.NORMAL)
         cfont = wx.Font(basefontsize + calendarfontadj, wx.DEFAULT,
                 wx.NORMAL, wx.NORMAL)
-        wx.Frame.__init__(self, None, -1, 'wxRemind', 
-                size=(740,420))
+        wx.Frame.__init__(self, None, -1, 'wxRemind')
         self.SetBackgroundColour(bgcolor)
 
-        # The top (selected date) bar
-        # self.datebar = wx.TextCtrl(self, -1, "", size=(-1,-1), 
-                # style = wx.TE_READONLY | BORDER)
         self.datebar = wx.TextCtrl(self, -1, "DateBar", size=(-1,-1), 
                 style = BORDER | wx.TE_CENTRE)
         self.datebar.SetBackgroundColour(nfcolor)
@@ -106,7 +103,8 @@ class MyFrame(wx.Frame):
         self.tdy.SetToolTipString("Show events for today.")
 
         # The event list
-        self.lc = MyListCtrl(self, -1, style=wx.LC_REPORT | wx.LC_SINGLE_SEL | 
+        self.lc = MyListCtrl(self, -1, size=eventsize,
+                style=wx.LC_REPORT | wx.LC_SINGLE_SEL | 
                 wx.LC_NO_HEADER | wx.WANTS_CHARS | BORDER )
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected, self.lc) 
         self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnItemActivated, self.lc) 
@@ -114,10 +112,14 @@ class MyFrame(wx.Frame):
         self.lc.Bind(wx.EVT_CHAR, self.OnChar)
         self.lc.SetFont(lfont)
         self.lc.SetBackgroundColour(bgcolor)
-        self.lc.InsertColumn(0, 'Start')
-        self.lc.InsertColumn(1, 'Interval')
-        self.lc.InsertColumn(2, 'End')
+        self.lc.InsertColumn(0, '00:00AM')
+        self.lc.InsertColumn(1, ' - ')
+        self.lc.InsertColumn(2, '00:00PM')
         self.lc.InsertColumn(3, 'Message')
+        self.lc.SetColumnWidth(0, -2)
+        self.lc.SetColumnWidth(1, 14)
+        self.lc.SetColumnWidth(2, -2)
+        self.lc.SetColumnWidth(3, -1)
         self.lc_id = self.lc.GetId()
 
         # The calendar
@@ -142,7 +144,7 @@ class MyFrame(wx.Frame):
         self.cal_id = self.cal.GetId()
 
         # The analog clock
-        self.clk = MyClock(self, size=(160+basefontsize,160+basefontsize), 
+        self.clk = MyClock(self, size=(clocksize,clocksize), 
                 hoursStyle=ac.TICKS_SQUARE, clockStyle=ac.SHOW_HOURS_TICKS| 
                 ac.SHOW_HOURS_HAND | ac.SHOW_MINUTES_HAND| ac.SHOW_SECONDS_HAND)
         self.clk.SetTickSize(16)
@@ -182,7 +184,7 @@ class MyFrame(wx.Frame):
         hbox2.Add(vbox3, 1, wx.EXPAND)
         vbox.Add(hbox1, 1, wx.EXPAND)
         vbox.Add(hbox2, 0, wx.EXPAND)
-        self.SetSizer(vbox)
+        self.SetSizerAndFit(vbox)
 
         # Show events for the current date.
         self.today = None
@@ -251,8 +253,17 @@ class MyFrame(wx.Frame):
         if self.data[self.currentItem][3]:
             rephash['f'] = self.data[self.currentItem][4]
             rephash['n'] = self.data[self.currentItem][5]
-            editlist = (editold % rephash).split()
-            os.spawnv(os.P_WAIT, editor, editlist)
+            if editor == '':
+                dlg = wxRemEditor.EditWindow(rephash['f'], rephash['n'])
+                dlg.ShowModal()
+                dlg.Destroy()
+            else:
+                editlist = (editold % rephash).split()
+                retval = os.spawnv(os.P_WAIT, editor, editlist)
+                if retval > 0:
+                    self.infoMessage(
+            'Attempt to start editor %s failed. Check setting in ~/.wxremindrc.' \
+                    % editor, 'Error')
             self.Refresh()
 
     def OnItemSelected(self, event):
@@ -385,10 +396,6 @@ class MyFrame(wx.Frame):
             self.lc.SetStringItem(index, 2, self.data[i][2])
             self.lc.SetStringItem(index, 3, self.data[i][3])
             self.lc.SetItemData(index, i)
-        self.lc.SetColumnWidth(0, wx.LIST_AUTOSIZE)
-        self.lc.SetColumnWidth(1, 14)
-        self.lc.SetColumnWidth(2, wx.LIST_AUTOSIZE)
-        self.lc.SetColumnWidth(3, wx.LIST_AUTOSIZE)
         self.datebar.SetValue(self.FormatDate(y,m,d))
         self.Focus('cal')
         self.detailbar.SetLabel(sb_string)
@@ -475,19 +482,39 @@ class MyFrame(wx.Frame):
                 rem = 'REM %(date)s MSG %(msg)s%%' % data
             if rem:
                 rephash['f'] = "%s" % reminders
-                cmd = "echo '%s' >> %s" % (rem, reminders)
-                os.system(cmd)
-                editlist = (editnew % rephash).split()
-                # print editlist
-                os.spawnv(os.P_WAIT, editor, editlist)
+                # Backup the existing reminders file
+                shutil.copyfile(reminders, reminders_backup)
+                remread = open(reminders,'r')
+                remlines = remread.readlines()
+                remread.close()
+                # make sure the last line ends with a \n
+                lastrem = remlines.pop().rstrip()
+                lastrem = "%s\n" % lastrem
+                remlines.append(lastrem)
+                # append the new reminder
+                remlines.append(rem)
+                remwrite = open(reminders, 'w')
+                remwrite.writelines(remlines)
+                remwrite.close()
+                # cmd = "echo '%s' >> %s" % (rem, reminders)
+                # os.system(cmd)
                 self.Refresh()
 
     def Edit(self,evt):
-        # Open the reminders file for editing.
+        # Open the default reminders file at the last line for editing.
         rephash['f'] = "%s" % reminders
-        rephash['n'] = 1
-        editlist = (editnew % rephash).split()
-        os.spawnv(os.P_WAIT, editor, editlist)
+        rephash['n'] = -1
+        if editor == '':
+            dlg = wxRemEditor.EditWindow(rephash['f'], rephash['n'])
+            dlg.ShowModal()
+            dlg.Destroy()
+        else:
+            editlist = (editnew % rephash).split()
+            retval = os.spawnv(os.P_WAIT, editor, editlist)
+            if retval > 0:
+                self.infoMessage(
+    "Unable to edit using:\n\n'%s'\n\nCheck setting in ~/.wxremindrc." \
+                % editor, 'Error', wx.ICON_ERROR)
         self.Refresh() 
 
     def Refresh(self):
@@ -528,10 +555,12 @@ class MyFrame(wx.Frame):
             self.OnSearch(evt)
 
     def notFound(self):
-        dlg = wx.MessageDialog(self, 
-                'No occurances of "%s" were found after %s.' % 
-                (Data.searchstr, Data.nextdate),'Failed Search', 
-                wx.OK | wx.ICON_INFORMATION)
+        self.infoMessage("No occurances of '%s' were found after %s." % 
+                (Data.searchstr, Data.nextdate),
+                'Failed Search', wx.ICON_INFORMATION)
+
+    def infoMessage(self, message, title, icon):
+        dlg = wx.MessageDialog(self, message ,title, wx.OK | icon)
         dlg.SetBackgroundColour(nfcolor)
         Data.nextdate = ''
         dlg.ShowModal()

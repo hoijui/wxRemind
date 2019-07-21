@@ -13,8 +13,9 @@ landscape = 1
 # show splashscreen on startup for this many seconds or 0 for not at all
 showsplash = 2
 
-# EDITOR
-editor = "/usr/local/bin/gvim"
+# EDITOR - Leave empty to use interal editor
+editor = ''
+# editor = "/usr/local/bin/gvim"
 # editor = "/usr/bin/emacs"
 
 # EDIT COMMAND SUBSTITUTIONS
@@ -24,7 +25,6 @@ editor = "/usr/local/bin/gvim"
 # COMMAND FOR EDITING AN OLD APPOINTMENT
 editold = "%(e)s -f +%(n)s %(f)s"        # gvim 
 # editold = "%(e)s +%(n)s %(f)s"         # emacs
-
 # COMMAND FOR EDITING A NEW APPOINTMENT (the last line in the file)
 editnew = "%(e)s -f + %(f)s"          # gvim
 # editnew = "%(e)s +999999 %(f)s"     # emacs
@@ -79,8 +79,18 @@ buttonfontadj = 0
 # The adjustment to the base fontsize for the calendar
 calendarfontadj = 0
 
-# The adjustment (horizontal, vertical) to the size of the calendar: 
+# Custom fontsizes may require adjustments to panel sizes.
+# The absolute startup size (horizontal, vertical) of the event list
+eventsize = (500,380)
+# The event list resizes automatically with the window size but the calendar
+# and clock keep their startup sizes.
+# The default size of the calendar takes account of the font size. 
+# The following adjustment (horizontal, vertical) fine tunes this default. 
 calsizeadj = (16, -4) 
+# The absolute size of the (fontless) analogclock: 
+clocksize = 190
+# The absolute size of the internal editor window:
+editorsize = (800,400)
 
 # COLORS
 # calendar busy times and colors

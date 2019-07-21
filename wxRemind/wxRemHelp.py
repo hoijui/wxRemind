@@ -26,11 +26,11 @@ In event list, previous/next event.</td> </tr>
 In event list, previous/next page.</td></tr>
 <tr><th>Enter</th> <td> In event list, edit the selected event.</td></tr>
 <tr><th>c</th> <td> Display/print postscript calendar for selected month. (requires ggv)</td></tr>
-<tr><th>e</th> <td> Edit any event in the default reminders file.</td></tr>
-<tr><th>a</th> <td> Create and edit a new timed event with an <em>alert</em>.</td></tr>
-<tr><th>t</th> <td> Create and edit a new <em>timed</em> event without an alert.</td></tr>
-<tr><th>u</th> <td> Create and edit a new <em>untimed</em> event.</ltd> </tr>
-<tr><th>f</th> <td> Create and edit a new <em>floating</em> reminder.</ltd> </tr>
+<tr><th>e</th> <td> Open the default reminders file for editing.</td></tr>
+<tr><th>a</th> <td> Create a new timed reminder with an <em>alert</em>.</td></tr>
+<tr><th>t</th> <td> Create a new <em>timed</em> reminder without an alert.</td></tr>
+<tr><th>u</th> <td> Create a new <em>untimed</em> reminder.</ltd> </tr>
+<tr><th>f</th> <td> Create a new <em>floating</em> reminder.</ltd> </tr>
 <tr><th>/</th> <td> Begin case-insensitive search from selected date.</td></tr>
 <tr><th>n</th> <td> Search for next occurance.</td></tr>
 <tr><th>R</th> <td> Refresh reminders. (Done automatically after editing.)</td></tr>
@@ -47,6 +47,7 @@ In event list, previous/next page.</td></tr>
         html.SetPage(self.text)
         html.SetBackgroundColour(fcolor)
         button = wx.Button(self, wx.ID_OK, "OK")
+        button.SetDefault()
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(html, 1, wx.EXPAND|wx.ALL, 5)
         sizer.Add(button, 0, wx.ALIGN_CENTER|wx.ALL, 5)

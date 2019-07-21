@@ -10,10 +10,30 @@ cellpadding="6" border="0">
     <td valign="center" align="center"><b>Reminder Hints</b></td>
 </tr>
 </table>
-<p><b>Date Strings</b></p>
+<p><b>Creating new reminders</b></p>
 
-<p>
 <small>
+
+<br> Select the target date in the calendar before pressing one of the following
+keys to create the new reminder.
+<center><table>
+<tr><th>a</th> <td>a new timed reminder with an <em>alert</em>.</td></tr>
+<tr><th>t</th> <td>a new <em>timed</em> reminder without an alert.</td></tr>
+<tr><th>u</th> <td>a new <em>untimed</em> reminder.</ltd> </tr>
+<tr><th>f</th> <td>a new <em>floating</em> reminder.</ltd> </tr>
+</table></center>
+
+<br>The selected date will automatically be placed in the date field and when
+you're finished filling in the fields, you will be able to see the resulting
+reminder in the event list. You can then select the new event and the status
+bar will show you its details. If there's anything about it you don't like,
+then you can press 'e' to bring up the editor with the cursor at the new
+reminder. Pressing 'e' will even bring up a 'broken' reminder that doesn't show
+up in the events list.</small>
+
+<p><b>Date Strings</b></p>
+<small>
+<center>
 <table cols="2" border="0">
 <tr><th>Date String</th><th align="left">Triggers</th></tr>
 <tr><th>Empty</th><td>Every day</td></tr>
@@ -30,19 +50,19 @@ cellpadding="6" border="0">
 <tr><th>Fri UNTIL 1 Jul 2006</th><td>Every Friday until 1 July 2006</td></tr>
 <tr><th>5 May 2006 *1 +2 UNTIL 15 May 2006</th><td>Every day from May 5 until May 15 plus 2 days advance notice.</td></tr>
 </table>
+</center>
 </small>
-</p>
+
 
 <p><b>Floating Reminders</b></p>
 <small>
-<p>
+<br>
 Date String: 15 Apr 2006
 <br>Warning Days: 10
 <br>Message String: File Taxes
 <br>Resulting reminder: REM [float(2006,Apr,15,10)] MSG File Taxes%%
-</p>
 
-<br>
+<center>
 <table cols="5" border="0">
 <tr><th>Today</th>
 <th align="left">Calendar for</th><th>Display</th>
@@ -69,6 +89,7 @@ Date String: 15 Apr 2006
 <th>Apr 15</th><td>File Taxes (today)</td>
 </tr>
 </table>
+</center>
 </small>
 
 <p><b>Time Strings</b></p>
@@ -98,20 +119,18 @@ Date String: 15 Apr 2006
 'Message' is a required field for all types of reminders. 'Other Message' is
 optional and, if present, will not appear in wxRemind's event list or other
 remind "calendar" uses, but will appear in normal, non-calendar uses and thus
-in alerts. For example,
+in alerts. For example,<br>
 
-<p>
-Message: Dentist appointment
+<br>Message: Dentist appointment
 <br>Other Message: %%1
-</p>
 
-<p>would appear on the relevant event list as <em>Dentist appointment</em> but
+<br>would appear on the relevant event list as <em>Dentist appointment</em> but
 the message for an alert triggered 20 minutes before the appointment would be
 <em>Dentist appointment 20 minutes from now</em>. See below for the use of %%1
 and other time and date substitution strings. Technically, if 'Other Message'
 were empty, the the reminder message would simply be <em>Dentist
 appointment%%</em>.  The addition of the 'Other Message', on the other hand,
-yields the message <em>%%"Dentist appointment%%" %%1%%</em>.</p>
+yields the message <em>%%"Dentist appointment%%" %%1%%</em>.
 </small>
 
 <p><b>Date Message Substitution Strings</b></p>
@@ -152,6 +171,7 @@ class Hints(wx.Dialog):
         html.SetPage(msg)
         html.SetBackgroundColour(fcolor)
         button = wx.Button(self, wx.ID_OK, "OK")
+        button.SetDefault()
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(html, 1, wx.EXPAND | wx.ALL, 4)
         sizer.Add(button, 0, wx.ALIGN_CENTER | wx.BOTTOM, 4)

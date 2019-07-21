@@ -59,10 +59,12 @@ after replacing <Path to FLOAT> with the correct location:
 
     INCLUDE <Path to FLOAT>/FLOAT
 
-Finally, edit WXREMINDRC to suit your own preferences and then save the
-resulting file as ~/.wxremindrc. Pay particular attention to the settings for
-editor (initially /usr/local/bin/gvim) and reminders (initially ~/.reminders).
-Both of these settings must be correct for your location.
+Finally, look over WXREMINDRC. If there are changes you would like to make, do
+so and then save the resulting file as  ~/.wxremindrc. Pay particular attention
+to the setting reminders (initially ~/.reminders).
+
+Note that you do not need to install ~/.wxremindrc if you are happy with the
+default settings. 
 
 You can now run wxRemind by opening a terminal window and entering at the
 command prompt:

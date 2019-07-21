@@ -9,7 +9,7 @@
 #   Remind usage:
 #       REM [float(y, m, d, n)] MSG ... %
 #
-#   where y/m/d is the target or due date for the reminer with
+#   where y/m/d is  the  target or due date for the reminer with
 #       y: integer (4-digit) year
 #       m: integer month
 #       d: inter date
@@ -30,7 +30,7 @@
 #               File tax return (today)
 #           On or before 5 Apr --- on 5 Apr event list:
 #               File tax return (in 10 days)
-#           On 10 Apr --- on 10 Apr event list:
+#           On 10 Apr --- on 10 Apr eve nt list:
 #               File tax return (in 5 days)
 #           On 14 Apr --- on 14 Apr event list:
 #               File tax return (tomorrow)
@@ -72,4 +72,3 @@ ELSE
     2000 >= x, " (in " + (x - 1000) + " days)", "")
 ENDIF
 # vim: ft=remind
-
