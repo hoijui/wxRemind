@@ -22,14 +22,14 @@ def alert():
     event_msg = ' '.join(args)
 
     if alert_sound == 1:
-        os.system(alert_soundcmd)
+        os.system("%s %s" % (alert_play, alert_wave))
     elif alert_sound == 2:
         if event_msg and alert_parsenums:
-            event_msg = "%s " % event_msg
+            spoken_msg = "%s " % event_msg
             # look for three consecutive digits preceeded by a non-digit and
             # followed by either a word boundary or a non-digit
             regex= re.compile(r'\D(\d{3,3})[\b\D]')
-            nums = re.findall(regex, event_msg)
+            nums = re.findall(regex, spoken_msg)
             if len(nums) > 0:
                 for num in nums:
                     d0 = num[0]
@@ -41,8 +41,8 @@ def alert():
                     # separate the leading digit from the following 2 digits
                     rep = "%s %s%s" % (d0,d1,d2)
                     # replace the original number
-                    event_msg = re.sub(num, rep, event_msg)
-                event_msg.strip()
+                    spoken_msg = re.sub(num, rep, spoken_msg)
+                spoken_msg.strip()
 
         hours,minutes,seconds = \
                 datetime.datetime.today().strftime("%H %M %S").split()
@@ -112,15 +112,25 @@ def alert():
             time += " %s%s" % (minutes, mins)
 
 
-        message += "The time is %s. %s" % (time, event_msg)
+        message += "The time is %s. %s" % (time, spoken_msg)
 
-        cmd = "/usr/bin/festival --tts"
-        try:
-            si, so = os.popen2(cmd)
-            si.write(message)
-        finally:
-            si.close()
-            so.close()
+        if festival:
+            cmd = "%s --tts" % festival
+            try:
+                si, so = os.popen2(cmd)
+                si.write(message)
+            finally:
+                si.close()
+                so.close()
+        else:
+            app = wx.PySimpleApp()
+            dlg = wx.MessageDialog(None, 
+    "The path to festival must be set in ~/.wxremindrc to use spoken alerts.",
+                    'wxRemind alert', 
+                    wx.OK | wx.STAY_ON_TOP | wx.ICON_ERROR)
+            dlg.SetBackgroundColour(fcolor)
+            retCode = dlg.ShowModal()
+            dlg.Destroy()
 
     if alert_display:
         app = wx.PySimpleApp()

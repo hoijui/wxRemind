@@ -1,6 +1,15 @@
 # Configuration settings for wxRemind
 # $Id: wxRemConfig.py 14 2006-05-09 12:20:50Z dag $
 
+# REMIND 
+remind = 'remind'
+
+# Festival (necessary for spoken alerts)
+festival = ''
+
+# ggv (Gnome Ghostview - necessary to display and print monthly calendars)
+ggv = 'ggv'
+
 # REMINDERS
 reminders = '~/.reminders'
 
@@ -18,7 +27,13 @@ editor = ''
 # editor = "/usr/local/bin/gvim"
 # editor = "/usr/bin/emacs"
 
+# Festival (necessary for spoken alerts)
+# leave empty if festival is not installed
+festival = ''
+# festival = '/usr/bin/festival'
+
 # EDIT COMMAND SUBSTITUTIONS
+# These are irrelevant if using the default interal editor
 # %(e)s -> the editor named above
 # %(n)s -> line number to edit
 # %(f)s -> file name
@@ -31,7 +46,9 @@ editnew = "%(e)s -f + %(f)s"          # gvim
 
 # A TIMED EVENT WITH AN ALERT
 # The system command to "play wav file" 
-alert_soundcmd = 'play /usr/share/sounds/KDE_Notify.wav'
+alert_play = 'play'
+# The wave file to play
+alert_wave = '/usr/share/sounds/KDE_Notify.wav'
 # ALERT DEFAULTS 
 # Display the alter box (1) or not (0)
 alert_display = 1
@@ -108,7 +125,6 @@ zerominutes = 15
 # for the calendar
 holidaycolor = 'BLACK'
 headercolor = 'NAVYBLUE'
-# headercolor = 'FIREBRICK'
 
 # BACKGROUND COLORS
 # handcolor: fill color for the analog clock hands and tick marks 
@@ -214,11 +230,16 @@ if editor and not isfile(editor):
     error = 1
     msg += "\nCannot find the custom editor '%s'!" % editor
     msg += emsg
+if festival and not isfile(festival):
+    # fatal, we can't find festival
+    error = 1
+    msg += "\nCannot find the festival program '%s'!" % festival
+    msg += emsg
 
 # print msg
 if error:
     app = wx.PySimpleApp()
-    dlg = wx.MessageDialog(None, msg ,'Fatal Error', 
+    dlg = wx.MessageDialog(None, msg ,'wxRemConfig: Fatal Error', 
             wx.OK|wx.ICON_ERROR)
     dlg.ShowModal()
     dlg.Destroy()

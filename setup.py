@@ -28,7 +28,7 @@ wxRemClassifiers = [
 
 setup(
     name = "wxRemind",
-    version = "0.6.5",
+    version = "0.6.8",
     packages = find_packages(),
     scripts = ['wxremdata', 'wxremalert', 'wxremind', 'wxremsetup'],
     author = "Daniel A. Graham",
@@ -41,5 +41,5 @@ setup(
     download_url = "http://www.duke.edu/~dgraham/wxRemind/wxRemind-current.tar.gz",
     url = "http://www.duke.edu/~dgraham/wxRemind",
     keywords = "calendar alarm schedule appointments",
-    data_files = [ ('', ['CHANGES', 'COPYING','FLOAT','README','WXREMINDRC'])],
+    data_files = [ ('', ['CHANGES', 'COPYING', 'INSTALL', 'README'])],
 )

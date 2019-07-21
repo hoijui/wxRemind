@@ -20,20 +20,11 @@ cellpadding="6" border="0">
 
 <p><em>wxRemind</em> is a  graphical front-end to <em>Remind</em>, a remarkably
 sophisticated calendar and alarm system.  It is similar to <em>Wyrd</em>, a
-curses based front-end to remind but is based on <em>wxPython</em> rather than
-curses. If there are things you like about wxRemind, they are almost certainly
-due either to David Skoll (remind), to Paul Pelzl (wyrd), or to the folks
-responsible for wxPython.</p>
+curses based front-end to Remind, but is based on <em>wxPython</em> rather than
+curses.</p>
 
-<center>
-<table border="0">
-<tr> <th>remind</th>   <td>http://www.roaringpenguin.com/penguin/open_source_remind.php</td></tr>
-<tr> <th>wyrd</th>     <td>www.eecs.umich.edu/~pelzlpj/wyrd</td> </tr>
-<tr> <th>wxPython</th> <td>www.wxpython.org</td> </tr>
-<tr> <th>wxRemind</th> <td>http://freshmeat.net/projects/wxrem/</td></tr>
-<tr> <th>FSW</th><td>www.gnu.org/licenses/gpl.html</td></tr>
-</table>
-</center>
+<p><em>Festival</em> (speech synthesis) is used for spoken alerts and <em>Gnome
+Ghostview</em> for monthly postscript calendar display and printing.</p>
 
 <p>This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
@@ -44,8 +35,20 @@ but <em>without any warranty</em>; without even the implied warranty of
 GNU General Public License for more details.</p>
 
 <p><center>
+<table border="0">
+<tr> <th>Remind</th>   <td>http://www.roaringpenguin.com/penguin/open_source_remind.php</td></tr>
+<tr> <th>Wyrd</th>     <td>www.eecs.umich.edu/~pelzlpj/wyrd</td> </tr>
+<tr> <th>wxPython</th> <td>www.wxpython.org</td> </tr>
+<tr> <th>wxRemind</th> <td>http://freshmeat.net/projects/wxrem/</td></tr>
+<tr> <th>Festival</th> <td>www.cstr.ed.ac.uk/projects/festival</td></tr>
+<tr> <th>FSW</th>      <td>www.gnu.org/licenses/gpl.html</td></tr>
+</table>
+</center></p>
+
+<p><center>
 Copyright (c) 2006 Daniel A. Graham &lt;daniel.graham@duke.edu&gt;
 </center></p>
+
 </small>
 </body>
 </html>
@@ -53,7 +56,7 @@ Copyright (c) 2006 Daniel A. Graham &lt;daniel.graham@duke.edu&gt;
 
     def __init__(self, parent):
         wx.Dialog.__init__(self, parent, -1, 'About wxRemind',
-                          size=(550, 540) )
+                          size=(550, 610) )
         html = wx.html.HtmlWindow(self)
         html.SetPage(self.text)
         html.SetBackgroundColour(fcolor)

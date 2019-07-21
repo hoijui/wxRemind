@@ -2,7 +2,7 @@
 # $Id: wxRemData.py 14 2006-05-09 12:20:50Z dag $ 
 
 import sys, os, datetime, re
-from wxRemConfig import zerominutes, twelvehour, reminders
+from wxRemConfig import zerominutes, twelvehour, reminders, remind
 
 class RemData:
 
@@ -59,18 +59,19 @@ class RemData:
         busy = {}
         if not self.data.has_key(year) or not self.data[year].has_key(month):
             self.slurp(y,m,1)
-        for day in self.data[year][month].keys():
-            minutes = 0
-            for event in self.data[year][month][day]:
-                minutes += event[6]
-            busy.setdefault(day, minutes)
+        if self.data.has_key(year) and self.data[year].has_key(month):
+            for day in self.data[year][month].keys():
+                minutes = 0
+                for event in self.data[year][month][day]:
+                    minutes += event[6]
+                busy.setdefault(day, minutes)
         return busy
 
     def slurp(self, y, m, n):
         startyear, startmonth, months = map(int, (y, m, n))
         # Slurp remind output for the relevant date and number of months
         startdate = datetime.date(startyear,startmonth,1).strftime("%b %Y")
-        command = "remind -b2 -rls%s %s %s" % (months, reminders, startdate)
+        command = "%s -b2 -rls%s %s %s" % (remind, months, reminders, startdate)
         (si, so) = os.popen2(command) 
         lines = so.read().splitlines()
         si.close()
@@ -131,13 +132,13 @@ class RemData:
             next = datetime.date.today().strftime("%d %b %Y")
             self.nextdate = self.leadingzero.sub('', next)
         self.searchstr = str
-        command = "remind -b2 -n %s | grep -i %s | sort" % (reminders, str)
+        command = "%s -b2 -n %s | grep -i %s | sort" % (remind, reminders, str)
         return self.nextOccurance()
 
     def nextOccurance(self):
         if self.nextdate and self.searchstr:
-            command = "remind -b2 -n %s %s | grep -i %s | sort" % \
-                    (reminders, self.nextdate, self.searchstr)
+            command = "%s -b2 -n %s %s | grep -i %s | sort" % \
+                    (remind, reminders, self.nextdate, self.searchstr)
             (si, so) = os.popen2(command)
             line = so.readline()
             si.close()

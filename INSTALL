@@ -1,153 +1,114 @@
 #!/usr/bin/python
-# $Id: $
 import sys, os
+cwd = os.getcwd()
+wxremalert = os.path.join(cwd, 'wxremalert')
+wxremalert_in_cwd = os.path.isfile(wxremalert)
 
-path = os.getenv('PATH').split(os.pathsep)
-
-pathlist = []
-for i in range(len(path)):
-    pathlist.append("    %s: %s" % (i, path[i]))
-
-pathstr = "\n".join(pathlist)
-
-if '/usr/local/bin' in path:
-    target = "/usr/local/bin"
-elif '/usr/bin' in path:
-    target = "/usr/bin"
-elif path:
-    target = path[0]
-else:
+if not wxremalert_in_cwd:
     print """
-    Error: The environmental variable 'PATH' is not defined. Contact your
-    system administrator.
-    """
-    sys.exit(0)
+Error: INSTALL must be run from the wxRemind root directory."""
+    sys.exit()
 
-# begin dependency checks
-FAIL = 0
-d = os.getcwd()
-v = sys.version.split()[0]
-if v < '2.3':
-    print "Error: You have version %s of Python installed. You need Python >= 2.3 to use this package."\
-            % v
-    FAIL = 1
-try:
-    import wx
-    w = wx.VERSION_STRING
-    if w < '2.6.1':
-        print "Error: You have version %s of wxPython installed. You need wxPython >= 2.6.1 to use this package." % w
-        FAIL = 1
-except:
-    print "Error: You do not have wxPython installed. You need wxPython >= 2.6.1 to use this package."
-    FAIL = 1
 
-if FAIL:
-    sys.exit(0)
-# end dependency checks
+def make_links():
+    path = os.getenv('PATH').split(os.pathsep)
+    pathlist = []
+    for i in range(len(path)):
+        if os.access(path[i], os.R_OK | os.W_OK | os.X_OK):
+            pathlist.append(" OK %s: %s" % (i, path[i]))
+        else:
+            pathlist.append("    %s: %s" % (i, path[i]))
+    if len(pathlist) > 0:
+        pathstr = "\n".join(pathlist)
+    else:
+        pathstr = """\
+    Error. Could not identify any directories in your system path. You will
+    need either to correct this problem or to choose not to use links.
+"""
 
-# create the symbolic links
+    print """
+                ===============================
+                     wxRemind Installation
+                ===============================
 
-print """
-                   ===============================
-                        wxRemind Installation
-                   ===============================
+It is possible to execute the scripts wxremind, wxremalert, wxremdata and
+wxremsetup by entering the complete path to the script, e.g.
 
-You have python %s and wxPython %s installed and thus satisfy the
-dependency requirements for wxRemind.
+REM 26 May 2006 AT 10:30 RUN \\
+        %s %%"Hello world%%" %%1%%
 
-All that remains to complete the installation is to create symbolic links from
-the python scripts wxremind, wxremalert and wxremdata to a directory in your
-executable path:
+It is much more convenient, however, to create symbolic links from the scripts
+to a directory in your executable path and then to use just the script name:
+
+REM 26 May 2006 AT 10:30 RUN wxremalert %%"Hello world%%" %%1%%
+
+Here are the directories in your system path with the ones in which you could
+create symbolic links indicated by 'OK':
 
 %s
 
-Please choose the number of the directory you would like to use or enter an
-empty response to use %s.
-""" % (v,w,pathstr,target)
+Enter the number of the directory you would like to use to have these links
+created for you (strongly recommended), or enter an empty response to avoid
+creating these links. 
+""" % (wxremalert, pathstr)
 
-response = raw_input("Number of directory to use for links? ")
+    response = raw_input("Number of directory to use for links? ")
 
-if response:
-    dstnum = int(response)
-    if dstnum in range(len(path)):
-        target = path[int(dstnum)]
+    if response and response != '':
+        dstnum = int(response)
+        if dstnum in range(len(path)):
+            target = path[int(dstnum)]
+        else:
+            target = ''
+    else:
+        target = ''
+
+    if target:
+        print """
+Creating symbolic links in %s ...""" % target
+
+        if not os.access(target, os.F_OK):
+            print """
+Error: %s does not exist. Either create this directory or use an existing
+directory.""" % target
+            sys.exit(0)
+
+        if not os.access(target, os.R_OK | os.W_OK | os.X_OK):
+            print """
+Error: You do not have permission to create links in %s
+Please start over with a directory in which you can create symbolic links.
+""" % target
+            sys.exit(0)
+
+        try:
+            for file in ['wxremalert', 'wxremdata', 'wxremind', 'wxremsetup']:
+                src = os.path.join(cwd, file)
+                dst = os.path.join(target, file)
+                try:
+                    os.remove(dst)
+                    print "Removed existing link %s" % dst 
+                except:
+                    pass
+                os.symlink(src, dst)
+                if os.access(dst,os.X_OK):
+                    print "Created symbolic link %s" % dst
+                else:
+                    print """
+                    Error: %s is not executable.
+                    """ % dst
+                    raise OSError
+        except:
+            print """
+Error: Failed to create the necessary symbolic links in %s
+
+You will need either to create these links manually or to use the complete
+path to execute a script.""" % target
     else:
         print """
-        Error: %d is not the number of one of the listed alternatives. Please
-        start over and select the number of one of the listed alternatives.
-        """ % dstnum
-        sys.exit(0)
+Symbolic link creation cancelled.
+"""
 
-print """
-Creating symbolic links in %s ...
-""" % target
+from wxRemind.wxRemSetup import setup
+make_links()
+setup()
 
-if not os.access(target, os.F_OK):
-    print """
-    Error: %s does not exist. Either create this directory or use an existing
-    directory in your path when you start over.
-    """ % target
-    sys.exit(0)
-
-if not os.access(target, os.R_OK | os.W_OK | os.X_OK):
-    print """
-    Error: You do not have permission to create links in %s. 
-    Please start over with a directory in which you can create
-    symbolic links.
-    """ % target
-    sys.exit(0)
-
-
-try:
-    for file in ['wxremalert', 'wxremdata', 'wxremind']:
-        src = "%s/%s" % (d, file)
-        dst = "%s/%s" % (target, file)
-        try:
-            os.remove(dst)
-            print "Removed existing link %s" % dst 
-        except:
-            pass
-        os.symlink(src, dst)
-        if os.access(dst,os.X_OK):
-            print "Created symbolic link %s" % dst
-        else:
-            print """
-            Error: %s is not executable.
-            """ % dst
-            raise OSError
-except:
-    print "Failed to create the necessary symbolic links in %s" % target
-    sys.exit(0)
-
-
-
-
-print """ 
-                   ===============================
-                        Successful Completion
-                   ===============================
-
-To enable floating reminders don't forget to insert the line
-
-    INCLUDE %s/FLOAT 
-
-in your reminders file prior to your first floating reminder - after adjusting
-
-    %s
-
-to reflect the new location if you move FLOAT. 
-
-Finally, look over WXREMINDRC. If there are changes you would like to make, do
-so and then save the resulting file as  ~/.wxremindrc. Pay particular attention
-to the setting reminders (initially ~/.reminders).
-
-Note that you do not need to install ~/.wxremindrc if you are happy with the
-default settings. 
-
-You can now run wxRemind by opening a terminal window and entering
-
-$ wxremind
-
-Once wxRemind is running, pressing ? will bring up a display of usage
-information.
-""" % (d,d)

@@ -1,3 +1,27 @@
+0.6.8
+
+    Bug fix. Fixed keyerror for year and month with no scheduled
+    events. Added missing default entries in wxRemConfig.py for
+    remind, festival, ggv, alert_play and alert_wave.
+
+0.6.7
+
+    Substantial changes to configuration. WXREMFLOAT/FLOAT and
+    WXREMINDRC are no longer included as separate files and INSTALL
+    has been modified to create links and then import wxRemSetup for
+    configuration.  The files ~/.wxremfloat and ~/.wxremindrc are
+    now automatically installed with the correct settings for the
+    user's setup either by INSTALL or by wxremsetup. The use of the
+    default ~/.reminders is assumed and an 'include .wxremfloat'
+    line is inserted at the beginning of this file after making a
+    backup copy, if necessary.
+
+    Fixed alert to parse numbers only for spoken message.
+
+0.6.6
+
+    Added path setting and configuration check for festival.
+
 0.6.5
 
     Minor cosmetic changes to analog clock. Fill color for hands and
@@ -9,7 +33,7 @@
     Exiting internal editor now prompts for confirmation if there
     are unsaved changes. Internal editor now returns True if the
     file has been modified and the changes saved and False
-    otherwise. A refresh is only done if true.
+    otherwise. A refresh is only done if True.
 
     Added [today] to today's datebar. Minor fixes for wxRemEditor's
     buttons and tooltips.
@@ -17,10 +41,10 @@
 0.6.0
 
     Added a simple, internal editor as the default for editing
-    existing reminders.  Opens the reminders file at revevant line
+    existing reminders.  Opens the reminders file at relevant line
     and highlights the line.
 
-    The interal editor means that it is no longer necessary to
+    The internal editor means that it is no longer necessary to
     create ~/.wxremindrc unless 
 
         1. you don't want to use the internal editor

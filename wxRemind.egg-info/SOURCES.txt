@@ -1,10 +1,8 @@
 CHANGES
 COPYING
-FLOAT
 INSTALL
 MANIFEST.in
 README
-WXREMINDRC
 ez_setup.py
 setup.py
 wxremalert
@@ -20,6 +18,7 @@ wxRemind/wxRemEdit.py
 wxRemind/wxRemEditor.py
 wxRemind/wxRemHelp.py
 wxRemind/wxRemHints.py
+wxRemind/wxRemSetup.py
 wxRemind/wxRemSplash.py
 wxRemind/wxRemVersion.py
 wxRemind/wxRemind.py

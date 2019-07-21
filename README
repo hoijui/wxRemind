@@ -1,8 +1,8 @@
-wxRemind
+                                    wxRemind
 
-   wxRemind is a graphical front-end to Remind, a remarkably sophisticated
-   calendar and alarm system. wxRemind is similar to Wyrd but is based on
-   wxPython rather than curses. The display features a calendar and daily
+   wxRemind is a graphical front-end to [1]Remind, a remarkably sophisticated
+   calendar and alarm system. wxRemind is similar to [2]Wyrd but is based on
+   [3]wxPython rather than curses. The display features a calendar and daily
    event list suitable for visualizing your schedule at a glance. Dates and
    associated events can be quickly selected either with the mouse or cursor
    keys, and dates in the calendar are color coded to reflect the total
@@ -12,9 +12,11 @@ wxRemind
    sound and/or spoken alerts and can display a postscript calendar of the
    selected month suitable for printing.
 
+                           version 0.6.8 - 2006-05-30
+
   Requirements
 
-   The latest version of wxRemind should be available at wxRemind.
+   The latest version of wxRemind should be available at [4]wxRemind.
 
    You will need to have remind and python >= 2.3 and, additionally, wxPython
    >= 2.6.1. For me (Centos 4 and python 2.3), installing wxPython required:
@@ -29,7 +31,7 @@ wxRemind
 
    Displaying monthly postscript calendars requires ggv (gnome ghostview).
 
-   Audible, spoken-message alerts require Festival.
+   Audible, spoken-message alerts require [5]Festival.
 
   Installation Alternatives
 
@@ -47,16 +49,11 @@ wxRemind
 
    and follow the instructions.
 
-   This script does the following:
-
-    1. Checks to make sure that you have sufficiently recent versions of
-       python and wxPython.
-    2. Prompts for a directory in your path and then creates symbolic links
-       for the wxRemind executables (wxremind, wxremalert and wxremdata) in
-       that directory. The link to wxremalert is necessary for remind to be
-       able to use it for alerts. The other links are for convenience.
-    3. Provides instructions for using FLOAT and WXREMINDRC to complete the
-       installation.
+   This script prompts for a directory in your path and then creates symbolic
+   links for the wxRemind executables (wxremind, wxremalert, wxremdata and
+   wxremsetup) in that directory. The link to wxremalert is necessary for
+   remind to be able to use it for alerts. The other links are for
+   convenience.
 
    Using INSTALL has the following advantages:
 
@@ -84,23 +81,13 @@ wxRemind
    python tree, usually under site-packages, and install the scripts in your
    system path, usually in /usr/bin/.
 
-   Finally, at a command prompt not as root but as yourself:
-
-   $ wxremsetup
-
-   and follow the instructions. This script checks to make sure you have
-   sufficiently recent versions of python and wxPython, installs two files,
-   FLOAT and WXREMINDRC, in a temporary location (typically under
-   ~/.python-eggs/) and provides instructions about using these files to
-   complete the installation.
-
    Proceed to Post Installation.
 
     3) Using Easy Install (usually requires root privileges)
 
    You do not need to download the tarball if you use this alternative.
 
-   Download ez_setup.py, and run it; this will download and install the
+   Download [6]ez_setup.py, and run it; this will download and install the
    appropriate setuptools egg for your Python version. An easy_install script
    will be installed in the normal location for Python scripts on your
    platform.
@@ -113,34 +100,43 @@ wxRemind
    python tree, usually under site-packages, and install the scripts in your
    system path, usually in /usr/bin.
 
-   Finally, at a command prompt not as root but as yourself:
-
-   $ wxremsetup
-
-   and follow the instructions. This script checks to make sure you have
-   sufficiently recent versions of python and wxPython, installs two files,
-   FLOAT and WXREMINDRC, in a temporary location (typically under
-   ~/.python-eggs/) and provides instructions about using these files to
-   complete the installation.
-
    Proceed to Post Installation.
 
   Post Installation
 
-   The last step is to follow the instructions either from INSTALL if using
-   approach (1) or from wxremsetup if using either (2) or (3). In either case
-   you will need to:
+   At a command prompt not as root but as yourself:
 
-   1) Copy FLOAT to a convenient location and then insert the following line
-   somewhere near the beginning of your reminders file (typically
-   ~/.reminders) after replacing <Path to FLOAT> with the correct location:
+   $ wxremsetup
 
-     INCLUDE <Path to FLOAT>/FLOAT
+   and follow the instructions. This configuration process will check for
+   sufficiently recent versions of 'python' and 'wxPython', for the presence
+   of 'remind', 'festival', 'ggv' and 'play' in your system path and for the
+   existence of the default alert sound file.
 
-   2) Edit WXREMINDRC to suit your own preferences and then save the
-   resulting file as ~/.wxremindrc. Pay particular attention to the settings
-   for editor (initially /usr/local/bin/gvim) and reminders (initially
-   ~/.reminders). Both of these settings must be correct for your location.
+   It will then create '.wxremfloat' in your home directory, overwriting any
+   existing file. The contents of this file will make it possible for you to
+   use floating reminders.
+
+   Next it will check for the existence of '.reminders' and '.wxremindrc' in
+   your home directory. If '.reminders' exists it will be checked to make
+   sure that it contains an 'include .wxremfloat' line. If it does not, first
+   a backup will be made named '.reminders.bak' and then the appropriate line
+   will be inserted at the beginning of the original file. If '.reminders'
+   does not exist, then it will be created with the necessary line as its
+   only content.
+
+   A new configuration file will then be created called '.wxremindrc' if this
+   file does not alread exist and '.wxremindrc.new' otherwise. This file will
+   automatically contain the correct settings for 'remind', 'festival', 'ggv'
+   and 'play' and, of course, for 'reminders' and 'wxremfloat'.
+
+   Finally, a report of messages generated during configuration will be
+   displayed.
+
+   IMPORTANT If created by the configuration process, it is strongly
+   recommended that you edit ~/.wxremindrc.new to reflect any custom settings
+   that you may have made in your existing ~/.wxremindrc, and then save
+   ~/.wxremindrc.new as ~/.wxremindrc.
 
    You can now run wxRemind by opening a terminal window and entering
 
@@ -169,6 +165,9 @@ wxRemind
    wxRemEdit.py
            Dialogs for creating new reminders.
 
+   wxRemEditor.py
+           Provides the internal editor.
+
    wxRemHelp.py
            Help page.
 
@@ -177,6 +176,9 @@ wxRemind
 
    wxRemind.py
            provides the main GUI interface.
+
+   wxRemSetup.py
+           Configuration procedures.
 
    wxRemSplash.py
            Splash page.
@@ -198,12 +200,11 @@ wxRemind
            independently of wxRemind and remind.
 
    INSTALL, wxremsetup
-           Used for dependency checks and initial post installation
-           configuration.
+           Used for dependency checks and configuration.
 
   License
 
-   Copyright (c) 2006 Daniel A. Graham <daniel.graham@duke.edu>
+   Copyright (c) 2006 Daniel A. Graham <[7]daniel.graham@duke.edu>
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the Free
@@ -212,3 +213,14 @@ wxRemind
    provided in the hope that it will be useful, but without any warranty;
    without even the implied warranty of merchantability or fitness for a
    particular purpose. Details are provided in the included COPYING file.
+
+References
+
+   Visible links
+   1. http://www.roaringpenguin.com/penguin/open_source_remind.php
+   2. http://www.eecs.umich.edu/~pelzlpj/wyrd
+   3. http://www.wxpython.org/
+   4. http://www.duke.edu/~dgraham/wxRemind
+   5. http://www.cstr.ed.ac.uk/projects/festival
+   6. http://peak.telecommunity.com/dist/ez_setup.py
+   7. mailto:daniel.graham@duke.edu
