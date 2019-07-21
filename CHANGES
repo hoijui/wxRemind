@@ -1,3 +1,8 @@
+0.6.9
+
+    Bug fix. Removed spurious space in wxRemConfig.py that broke
+    .wxremfloat.
+
 0.6.8
 
     Bug fix. Fixed keyerror for year and month with no scheduled

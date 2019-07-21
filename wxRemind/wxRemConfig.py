@@ -33,16 +33,17 @@ festival = ''
 # festival = '/usr/bin/festival'
 
 # EDIT COMMAND SUBSTITUTIONS
-# These are irrelevant if using the default interal editor
 # %(e)s -> the editor named above
 # %(n)s -> line number to edit
 # %(f)s -> file name
-# COMMAND FOR EDITING AN OLD APPOINTMENT
-editold = "%(e)s -f +%(n)s %(f)s"        # gvim 
-# editold = "%(e)s +%(n)s %(f)s"         # emacs
-# COMMAND FOR EDITING A NEW APPOINTMENT (the last line in the file)
-editnew = "%(e)s -f + %(f)s"          # gvim
-# editnew = "%(e)s +999999 %(f)s"     # emacs
+# COMMAND FOR EDITING AN OLD APPOINTMENT (irrelevant with internal editor)
+editold = ''                            # internal editor
+# editold = "%(e)s -f +%(n)s %(f)s"     # gvim 
+# editold = "%(e)s +%(n)s %(f)s"        # emacs
+# COMMAND FOR EDITING A NEW APPOINTMENT (irrelevant with internal editor)
+editnew = ''                            # internal editor
+# editnew = "%(e)s -f + %(f)s"          # gvim
+# editnew = "%(e)s +999999 %(f)s"       # emacs
 
 # A TIMED EVENT WITH AN ALERT
 # The system command to "play wav file" 

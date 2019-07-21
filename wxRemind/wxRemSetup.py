@@ -68,12 +68,14 @@ editor = ''
 # %%(e)s -> the editor named above
 # %%(n)s -> line number to edit
 # %%(f)s -> file name
-# COMMAND FOR EDITING AN OLD APPOINTMENT
-# editold = "%%(e)s -f +%%(n)s %%(f)s"        # gvim 
+# COMMAND FOR EDITING AN OLD APPOINTMENT (irrelevant with internal editor)
+editold = ''                                # internal editor
+# editold = "%%(e)s -f +%%(n)s %%(f)s"      # gvim 
 # editold = "%%(e)s +%%(n)s %%(f)s"         # emacs
-# COMMAND FOR EDITING A NEW APPOINTMENT (the last line in the file)
-# editnew = "%%(e)s -f + %%(f)s"          # gvim
-# editnew = "%%(e)s +999999 %%(f)s"     # emacs
+# COMMAND FOR EDITING A NEW APPOINTMENT  (irrelevant with internal editor)
+editnew = ''                                # internal editor
+# editnew = "%%(e)s -f + %%(f)s"            # gvim
+# editnew = "%%(e)s +999999 %%(f)s"         # emacs
 
 # A TIMED EVENT WITH AN ALERT
 # The system command to "play" a wav file
@@ -234,7 +236,7 @@ ELSE
     iif(n >= date(y,m,d) - today(), " PRIORITY " + \\
     (1000 + (date(y,m,d) - today())),"")))
 
-    FSET msgsuffix(x) iif(0 > x, "", \
+    FSET msgsuffix(x) iif(0 > x, "", \\
     998 >= x, " (" + (1000-x) + " days ago)", \\
     999 >= x, " (yesterday)", \\
     1000 >= x, " (today)", \\
@@ -246,7 +248,7 @@ ELSE
     998 >= x, " (" + (1000-x) + "  days ago)", \\
     999 >= x, " (yesterday)", \\
     1000 >= x, " (today) ", \\
-    1001 >= x, " (tomorrow)", \\ 
+    1001 >= x, " (tomorrow)", \\
     2000 >= x, " (in " + (x - 1000) + " days)", "")
 ENDIF
 """ % wxremfloat
