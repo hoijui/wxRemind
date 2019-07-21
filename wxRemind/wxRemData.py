@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # $Id: wxRemData.py 14 2006-05-09 12:20:50Z dag $ 
 
-import sys, os, datetime, re
+import sys, datetime, re, commands
 from wxRemConfig import zerominutes, twelvehour, reminders, remind
 
 class RemData:
@@ -72,10 +72,7 @@ class RemData:
         # Slurp remind output for the relevant date and number of months
         startdate = datetime.date(startyear,startmonth,1).strftime("%b %Y")
         command = "%s -b2 -rls%s %s %s" % (remind, months, reminders, startdate)
-        (si, so) = os.popen2(command) 
-        lines = so.read().splitlines()
-        si.close()
-        so.close()
+        lines = commands.getoutput(command).split('\n')
         linenum = 0 
         filename = ''
         for line in lines:
@@ -139,10 +136,7 @@ class RemData:
         if self.nextdate and self.searchstr:
             command = "%s -b2 -n %s %s | grep -i %s | sort" % \
                     (remind, reminders, self.nextdate, self.searchstr)
-            (si, so) = os.popen2(command)
-            line = so.readline()
-            si.close()
-            so.close()
+            line = commands.getoutput(command)
             if len(line) > 0:
                 parts = line.split()
                 year, month, day = map(int, parts[0].split('/'))
