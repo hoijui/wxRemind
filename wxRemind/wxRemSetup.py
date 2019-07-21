@@ -1,13 +1,16 @@
 #!/usr/bin/python
 # $Id: wxRemAlert.py 14 2006-05-09 12:20:50Z dag $
 import wx
-# from wxRemConfig import * 
-import sys, os, re
+from wxRemConfig import * 
+import sys, os, re, datetime
 import shutil
 msg = []
 warn = []
 
-d = {'remind' : '', 'festival' : '', 'ggv' : ''}
+today = datetime.date.today().strftime("%d %b %Y")
+d = {'remind' : '', 'festival' : '', 'gv' : ''}
+d['gv_opts'] = gv_opts
+d['calendars'] = os.path.expanduser(calendars)
 
 reminders = os.path.expanduser("~/.reminders")
 has_reminders = os.path.isfile(reminders)
@@ -21,7 +24,8 @@ new_wxremindrc = False
 wxremfloat = os.path.expanduser("~/.wxremfloat")
 has_wxremfloat = os.path.isfile(wxremfloat)
 
-include_line = "INCLUDE %s" % wxremfloat
+include_line = """INCLUDE %s
+REM %s MSG Thanks for using wxRemind!%%""" % (wxremfloat, today)
 
 alert_wave = '/usr/share/sounds/KDE_Notify.wav'
 has_sound = os.path.isfile(alert_wave)
@@ -42,8 +46,12 @@ remind = '%(remind)s'
 # Festival (necessary for spoken alerts)
 festival = '%(festival)s'
 
-# ggv (Gnome Ghostview - necessary to display and print monthly calendars)
-ggv = '%(ggv)s'
+# gv (ghostview - necessary to display and print monthly calendars)
+gv = '%(gv)s'
+# Options to pass to gv
+gv_opts = '%(gv_opts)s'
+# Put temporary postscript calendar files here
+calendars = '%(calendars)s'
 
 # The reminders file
 reminders = '%(reminders)s'
@@ -314,23 +322,26 @@ Error: Could not find festival in your PATH. Festival must be installed
 with the executable 'festival' in your system path for you to be able to
 use spoken alerts.""")
 
-    d['ggv'] = PathSearch('ggv')
-    if d['ggv']:
-        msg.append("Found ggv at '%s'" % d['ggv'])
+    d['gv'] = PathSearch('gv')
+    if d['gv']:
+        msg.append("Found gv at '%s'" % d['gv'])
     else:
         warn.append("""\
-Error: Could not find ggv in your PATH. Gnome ghostview must be installed
-with the executable 'ggv' in your system path for you to be able to display
-and print monthly calendars.""")
+
+Error: Could not find gv in your PATH. You will need to install ghostview (gv
+or gnome-gv), or some other postscript viewer and to correct the setting for
+'gv' in %s to be able to view and print postscript monthly calendars.""" %
+wxremindrc)
 
     d['play'] = PathSearch('play')
     if d['play']:
         msg.append("Found play at '%s'" % d['play'])
     else:
         warn.append("""\
-Error: Could not find play in your PATH. Gnome ghostview must be installed
-with the executable 'ggv' in your system path for you to be able to display
-and print monthly calendars.""")
+Error: Could not find play in your PATH. This program is part of the sox 
+package and is used to play a wav file as an audible alert.  You will need 
+to correct the setting for 'alert_play' in %s to be able to use sound 
+alerts.""" % wxremindrc)
 
     if has_sound:
         msg.append("Found alert_wave file: %s" % alert_wave)
@@ -339,7 +350,6 @@ and print monthly calendars.""")
 Could not find the default alert sound wave file, %s. You will need to correct
 the setting for 'alert_wave' in %s to be able to use sound alerts.""" %
 (alert_wave, wxremindrc))
-
 
 def make_reminders():
     global msg, warn
@@ -358,10 +368,9 @@ def make_reminders():
                 found = True
                 break
         if found:
-            msg.append("  and it contains the requisite '%s' " % (include_line)) 
+            msg.append("  and it 'includes' .wxremfloat") 
         else:
-            msg.append("  and it does not contain the requisite '%s'"
-                    % (include_line)) 
+            msg.append("  but it does not 'include' .wxremfloat") 
             lines.insert(0, "%s\n" % include_line)
             shutil.copyfile(reminders, "%s.bak" % reminders)
             msg.append("  Created backup %s.bak"% reminders)
@@ -423,7 +432,7 @@ def setup():
                 ===============================
 
 This configuration process will check for sufficiently recent versions of
-'python' and 'wxPython', for the presence of 'remind', 'festival', 'ggv' and
+'python' and 'wxPython', for the presence of 'remind', 'festival', 'gv' and
 'play' in your system path and for the existence of the default alert sound
 file. 
 
@@ -440,7 +449,7 @@ will be created with the necessary line as its only content.
 
 A new configuration file will then be created called '.wxremindrc' if this file
 does not alread exist and '.wxremindrc.new' otherwise. This file will
-automatically contain the correct settings for 'remind', 'festival', 'ggv' and
+automatically contain the correct settings for 'remind', 'festival', 'gv' and
 'play' and, of course, for 'reminders' and 'wxremfloat'.
 
 Finally, a report of messages generated during configuration will be displayed.

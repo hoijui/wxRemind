@@ -77,6 +77,8 @@ class RemData:
         filename = ''
         for line in lines:
             parts = line.split()
+            if len(parts) == 0:
+                continue
             if parts[1] == "fileinfo":
                 linenum, filename = parts[2:4]
                 # go to the next line for the item details

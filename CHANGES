@@ -1,3 +1,16 @@
+0.6.18
+
+    Bug fixes. Updated setup to default to using gv to display
+    postscript monthly calendars. The postscript calendar is now
+    written to a temporary file, ~/.wxremcalendar by default, to
+    permit printing from gv. 
+
+0.6.17
+
+    Bug fixes. wxRemData.py can now deal with a present but empty
+    .reminders file.  Corrected error message in wxremsetup for
+    a missing alert_play program.
+
 0.6.16
 
     INSTALL now runs as 'python INSTALL' to avoid problems specifying

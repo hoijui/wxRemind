@@ -302,7 +302,11 @@ class MyFrame(wx.Frame):
             ls = ''
         date = datetime.date(self.selday[0],
                 self.selday[1],self.selday[2]).strftime("%b %Y")
-        command = "remind -p %s %s | rem2ps %s | ggv -" % (reminders, date, ls)
+        # command = "remind -p %s %s | rem2ps %s | %s %s -" \
+                # % (reminders, date, ls, gv, gv_opts)
+        command = "remind -p %s %s | rem2ps %s > %s && %s %s %s" \
+                % (reminders, date, ls, calendars, gv, gv_opts, calendars)
+        print command
         os.system(command)
 
     def OnSetFocus(self, event):

@@ -7,8 +7,12 @@ remind = 'remind'
 # Festival (necessary for spoken alerts)
 festival = ''
 
-# ggv (Gnome Ghostview - necessary to display and print monthly calendars)
-ggv = 'ggv'
+# gv (postscript viewer - necessary to display and print monthly calendars)
+gv = 'gv'
+# Options to pass to gv
+gv_opts = '--orientation=landscape --media=LETTER'
+# Put temporary postscript calendar files here
+calendars = '~/.wxremcalendar'
 
 # REMINDERS
 reminders = '~/.reminders'
