@@ -24,6 +24,7 @@ wxRemind/wxRemVersion.py
 wxRemind/wxRemind.py
 wxRemind.egg-info/PKG-INFO
 wxRemind.egg-info/SOURCES.txt
+wxRemind.egg-info/dependency_links.txt
 wxRemind.egg-info/top_level.txt
 wxRemind/analogclock/__init__.py
 wxRemind/analogclock/analogclock.py
