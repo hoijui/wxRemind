@@ -1,0 +1,214 @@
+wxRemind
+
+   wxRemind is a graphical front-end to Remind, a remarkably sophisticated
+   calendar and alarm system. wxRemind is similar to Wyrd but is based on
+   wxPython rather than curses. The display features a calendar and daily
+   event list suitable for visualizing your schedule at a glance. Dates and
+   associated events can be quickly selected either with the mouse or cursor
+   keys, and dates in the calendar are color coded to reflect the total
+   duration of scheduled events. wxRemind integrates with an external editor
+   of your choice to make editing of reminder files more efficient, provides
+   hotkeys to quickly access the most common Remind options, allows popup,
+   sound and/or spoken alerts and can display a postscript calendar of the
+   selected month suitable for printing.
+
+  Requirements
+
+   The latest version of wxRemind should be available at wxRemind.
+
+   You will need to have remind and python >= 2.3 and, additionally, wxPython
+   >= 2.6.1. For me (Centos 4 and python 2.3), installing wxPython required:
+
+     * wxPython2.6-common-gtk2-unicode-2.6.3.0-fc2_py2.3.i386.rpm
+     * wxPython2.6-gtk2-unicode-2.6.3.0-fc2_py2.3.i386.rpm
+
+   Note: analogclock is a recent addition to wxPython (2.6.3) and is required
+   for wxRemind. A copy has been included in this distribution under the
+   wxWidgets license for the convenience of those with earlier versions of
+   wxPython already installed.
+
+   Displaying monthly postscript calendars requires ggv (gnome ghostview).
+
+   Audible, spoken-message alerts require Festival.
+
+  Installation Alternatives
+
+   Follow one of the following alternatives.
+
+    1) Using INSTALL
+
+   Unpack the contents of the wxRemind.tgz in a convenient location, open a
+   terminal window and then at a command prompt (not as root but as
+   yourself):
+
+   $ cd <path to wxRemind directory>
+
+   $ ./INSTALL
+
+   and follow the instructions.
+
+   This script does the following:
+
+    1. Checks to make sure that you have sufficiently recent versions of
+       python and wxPython.
+    2. Prompts for a directory in your path and then creates symbolic links
+       for the wxRemind executables (wxremind, wxremalert and wxremdata) in
+       that directory. The link to wxremalert is necessary for remind to be
+       able to use it for alerts. The other links are for convenience.
+    3. Provides instructions for using FLOAT and WXREMINDRC to complete the
+       installation.
+
+   Using INSTALL has the following advantages:
+
+    1. It doesn't require root privileges.
+    2. It leaves your python tree untouched. To remove wxRemind simply delete
+       the directory where it was unpacked and the three symbolic links
+       created by INSTALL.
+    3. It runs on a wide variety of platforms without tweaking. Since the
+       package files are in a subdirectory of the root directory where the
+       scripts are located, the scripts can automatically find the package
+       files ON ANY PLATFORM without further intervention.
+
+   Proceed to Post Installation.
+
+    2) Using setup.py (usually requires root privileges)
+
+   Unpack the contents of the wxRemind.tgz in a convenient location, open a
+   terminal window and then at the command prompt (as root):
+
+   # cd <path to wxRemind directory>
+
+   # python setup.py install
+
+   This will create an egg (a compressed zip file) and install it in the
+   python tree, usually under site-packages, and install the scripts in your
+   system path, usually in /usr/bin/.
+
+   Finally, at a command prompt not as root but as yourself:
+
+   $ wxremsetup
+
+   and follow the instructions. This script checks to make sure you have
+   sufficiently recent versions of python and wxPython, installs two files,
+   FLOAT and WXREMINDRC, in a temporary location (typically under
+   ~/.python-eggs/) and provides instructions about using these files to
+   complete the installation.
+
+   Proceed to Post Installation.
+
+    3) Using Easy Install (usually requires root privileges)
+
+   You do not need to download the tarball if you use this alternative.
+
+   Download ez_setup.py, and run it; this will download and install the
+   appropriate setuptools egg for your Python version. An easy_install script
+   will be installed in the normal location for Python scripts on your
+   platform.
+
+   Then at the command prompt (as root):
+
+   # easy_install wxRemind
+
+   This will download and install the egg (a compressed zip file) in the
+   python tree, usually under site-packages, and install the scripts in your
+   system path, usually in /usr/bin.
+
+   Finally, at a command prompt not as root but as yourself:
+
+   $ wxremsetup
+
+   and follow the instructions. This script checks to make sure you have
+   sufficiently recent versions of python and wxPython, installs two files,
+   FLOAT and WXREMINDRC, in a temporary location (typically under
+   ~/.python-eggs/) and provides instructions about using these files to
+   complete the installation.
+
+   Proceed to Post Installation.
+
+  Post Installation
+
+   The last step is to follow the instructions either from INSTALL if using
+   approach (1) or from wxremsetup if using either (2) or (3). In either case
+   you will need to:
+
+   1) Copy FLOAT to a convenient location and then insert the following line
+   somewhere near the beginning of your reminders file (typically
+   ~/.reminders) after replacing <Path to FLOAT> with the correct location:
+
+     INCLUDE <Path to FLOAT>/FLOAT
+
+   2) Edit WXREMINDRC to suit your own preferences and then save the
+   resulting file as ~/.wxremindrc. Pay particular attention to the settings
+   for editor (initially /usr/local/bin/gvim) and reminders (initially
+   ~/.reminders). Both of these settings must be correct for your location.
+
+   You can now run wxRemind by opening a terminal window and entering
+
+   $ wxremind
+
+   Once wxRemind is running, pressing ? will bring up a display of usage
+   information.
+
+  wxRemind (python package) Files
+
+   wxRemAbout.py
+           About page.
+
+   wxRemAlert.py
+           Used by default to produce popup/sound alerts for reminders
+           triggered by remind. The default behavior can be set in
+           wxRemConfig.py.
+
+   wxRemConfig.py
+           Color and other customizations. User specific customizations in
+           ~/.wxremindrc override the settings in this file.
+
+   wxRemData.py
+           Provides the interface to remind.
+
+   wxRemEdit.py
+           Dialogs for creating new reminders.
+
+   wxRemHelp.py
+           Help page.
+
+   wxRemHints.py
+           Hints for creating reminders.
+
+   wxRemind.py
+           provides the main GUI interface.
+
+   wxRemSplash.py
+           Splash page.
+
+   wxRemVersion.py
+           wxRemind version information.
+
+  wxRemind scripts
+
+   wxremind
+           Used to start wxRemind at the command prompt. Takes no arguments.
+
+   wxremdata
+           Returns day schedule as console output. Optional YYYY MM DD date
+           argument, defaults to today.
+
+   wxremalert
+           Produces an alert. Details in wxRemConfig.py. Can be used
+           independently of wxRemind and remind.
+
+   INSTALL, wxremsetup
+           Used for dependency checks and initial post installation
+           configuration.
+
+  License
+
+   Copyright (c) 2006 Daniel A. Graham <daniel.graham@duke.edu>
+
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation (www.gnu.org/licenses/gpl.html); either version 2 of
+   the License, or (at your option) any later version. This program is
+   provided in the hope that it will be useful, but without any warranty;
+   without even the implied warranty of merchantability or fitness for a
+   particular purpose. Details are provided in the included COPYING file.

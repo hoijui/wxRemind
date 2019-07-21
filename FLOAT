@@ -1,0 +1,75 @@
+######################
+# FLOATING REMINDERS #
+######################
+#   $Id: FLOAT,v 1.2 2006/05/06 15:59:15 dag Exp dag $
+# 
+#   To enable floating reminders INCLUDE this file in your reminders
+#   file prior to any use of float().
+# 
+#   Remind usage:
+#       REM [float(y, m, d, n)] MSG ... %
+#
+#   where y/m/d is the target or due date for the reminer with
+#       y: integer (4-digit) year
+#       m: integer month
+#       d: inter date
+#   and 
+#       n: integer number of days of advance warning.
+#
+#   Example:
+#
+#       REM [float(2006,4,15,10)] MSG File tax return%
+#
+#   will display as follows:
+#
+#       In calendar modes on 15 Apr 2006 only:
+#           File tax return
+#
+#       Other, non-calendar modes:
+#           On any date --- on 15 Apr event list:
+#               File tax return (today)
+#           On or before 5 Apr --- on 5 Apr event list:
+#               File tax return (in 10 days)
+#           On 10 Apr --- on 10 Apr event list:
+#               File tax return (in 5 days)
+#           On 14 Apr --- on 14 Apr event list:
+#               File tax return (tomorrow)
+#           On 16 Apr --- on 16 Apr event list:
+#               File tax return (yesterday)
+#           On 18 Apr --- on 18 Apr event list:
+#               File tax return (3 days ago)
+#
+#   Additionally, float() events are automatically assigned priorities so that
+#   reminders are ordered by their due dates. These priorities range from 0
+#   (1000 days ago) to 2000 with priority 1000 corresponding to today.  Since
+#   remind's default priority is 5000, such floating reminders will be listed
+#   before any default reminders.
+#
+IF  ($CalMode || $PSCal )
+    # For Cal and PS calendars, only trigger the event on the due date.
+    FSET float(y,m,d,n) trigger(date(y,m,d))
+ELSE
+    # For Simple Calendar (rem -s) and other modes, also set warning trigger,
+    # priority and suffixes.
+    FSET float(y,m,d,n) iif(date(y,m,d) == today(), trigger(today()) + \
+    " PRIORITY 1000", trigger(MAX(realtoday(), date(y,m,d)-n)) + \
+    iif(n >= date(y,m,d) - today(), " PRIORITY " + \
+    (1000 + (date(y,m,d) - today())),"")))
+
+    FSET msgsuffix(x) iif(0 > x, "", \
+    998 >= x, " (" + (1000-x) + " days ago)", \
+    999 >= x, " (yesterday)", \
+    1000 >= x, " (today)", \
+    1001 >= x, " (tomorrow)", \
+    2000 >= x, " (in " + (x - 1000) + " days)", "")
+
+    # This calsuffix is used by wxRemind
+    FSET calsuffix(x) iif(0 > x, "", \
+    998 >= x, " (" + (1000-x) + " days ago)", \
+    999 >= x, " (yesterday)", \
+    1000 >= x, " (today)", \
+    1001 >= x, " (tomorrow)", \
+    2000 >= x, " (in " + (x - 1000) + " days)", "")
+ENDIF
+# vim: ft=remind
+

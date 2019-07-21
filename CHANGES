@@ -1,0 +1,113 @@
+0.5.0
+
+    Significant cosmetic improvements.
+
+    Replaced listctrl header and statusbar with textcrtl's to solve
+    background color problems and to allow selected date to be
+    centered. Switched from 1 to 3 columns for event list to allow the
+    use of non-monospaced fonts.
+
+    Added configuration option for selecting font sizes, and for
+    selecting background colors either by 'family' or individually.
+
+    Selection automatically removed from event when focus switches
+    from event list to calendar.
+
+0.4.3
+
+    Added wxremsetup for post installation configuration using
+    either setup.py or easy_install.  Checks python and wxPython
+    dependencies (never got the latter to work with
+    install_requires), unpacks FLOAT and WXREMINDRC to a temporary
+    directory and provides instructions similar to INSTALL for using
+    these files to finish the installation.
+
+    Edited index.html and README to reflect these changes.
+
+0.4.2
+
+    Initial attempt at setup.py configuration with access to FLOAT
+    and WXREMINDRC.
+
+0.4.1
+
+    Added CHANGES, COPYING, FLOAT, README and WXREMINDRC to egg.
+
+0.4 2006-05-19
+
+    Changed version numbering to traditional format.
+
+    Added setup.py (based on setuptools/ez_setup --- not distutils)
+    and easy_install to INSTALL as optional installation methods.
+
+2006-05-18
+
+    Replaced calls to 'rem' with direct calls to 'remind' for the
+    convenience of those whose remind installations did not include
+    rem. 
+
+    Fixed bug in specifying the default location of the reminders
+    file.
+
+    Added a 'new reminder' dialog to facilitate the process of
+    creating reminders to those new to remind. Untimed, timed, alert
+    and floating reminders are supported. 
+
+    Added a page showing hints for creating new reminders.
+
+    Added an optional status bar display of the reminder
+    corresponding to the selected event --- displays the complete
+    details of the selected event without the necessity of opening
+    the external editor.
+
+    When the event list takes focus, the first item is now selected
+    unless another item was already selected.
+
+    Added border styles (sunken, flat, raised) for event list,
+    calendar and status bar to the configuration options.
+
+    Removed leading zero on day in searches.
+
+2006-05-14
+
+    Converted INSTALL to a python script.  Better dependency checks
+    and more user friendly location choice for symbolic links. Does
+    not require root permissions, leaves the python tree untouched
+    and should work on all platforms since the package files are
+    located in a subdirectory of the directory containing the
+    scripts.
+
+    User specific customizations can now be set in ~/.wxremindrc.
+
+2006-05-07
+
+    New alert feature:  Reminders can now 'RUN' wxRemAlert.py
+    (provided) to display a pop-up message and/or play a sound file
+    or, if available, invoke festival (Festival Speech Synthesis) to
+    read the event message aloud. Details and an example are
+    provided in wxRemConfig.py (provided).
+
+    New PS monthly calendar: display and optionally print a
+    postscript calendar for selected month.  Uses remind's rem2ps
+    and requires ggv (Gnome GhostView) for display.
+
+    New font configuration option: font facenames and sizes for today
+    button and event list, 
+
+    New time display option: choose between twelve-hour (AM/PM) and
+    twenty-four hour time displays.
+
+    Improved, wyrd-like configuration for editor and remind strings
+    (untimed, timed, etc.)
+
+    Improved syntax for floating reminders: f(y,m,d,n) now sets a
+    reminder due on y/m/d with an n day advance warning - see the
+    documentation in FLOAT (provided).
+
+    Cosmetic: Removed leading zeros from hours and days.
+
+2006-05-02
+
+    Initial release
+
+vim: ft=text

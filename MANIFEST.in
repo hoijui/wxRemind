@@ -1,0 +1,6 @@
+include CHANGES
+include COPYING
+include FLOAT
+include INSTALL
+include WXREMINDRC
+include ez_setup.py

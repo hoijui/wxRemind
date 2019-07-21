@@ -1,0 +1,4 @@
+#!/usr/bin/python
+from wxRemind.wxRemind import App
+app = App()
+app.MainLoop()

@@ -1,0 +1,30 @@
+Metadata-Version: 1.0
+Name: wxRemind
+Version: 0.5.0
+Summary: A wxPython based GUI for Remind
+Home-page: http://www.duke.edu/~dgraham/wxRemind
+Author: Daniel A. Graham
+Author-email: daniel.graham@duke.edu
+License: GPL
+Download-URL: http://www.duke.edu/~dgraham/wxRemind/wxRemind-current.tar.gz
+Description: wxRemind is a wxPython-based front-end for Remind, a powerful calendar and
+        alarm application. The display features a calendar and daily event list
+        suitable for visualizing your schedule at a glance. Dates and associated events
+        can be quickly selected either with the mouse or cursor keys, and dates in the
+        calendar are color coded to reflect the total duration of scheduled events.
+        wxRemind integrates with an external editor of your choice to make editing of
+        reminder files more efficient, provides hotkeys to quickly access the most
+        common Remind options and supports visual, sound and/or spoken alerts.
+Keywords: calendar alarm schedule appointments
+Platform: Any
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: X11 Applications
+Classifier: Intended Audience :: End Users/Desktop
+Classifier: License :: OSI Approved :: GNU General Public License (GPL)
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Programming Language :: Python
+Classifier: Natural Language :: English
+Classifier: Topic :: Desktop Environment :: Gnome
+Classifier: Topic :: Desktop Environment :: K Desktop Environment (KDE)
+Classifier: Topic :: Office/Business :: Scheduling
