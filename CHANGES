@@ -1,3 +1,14 @@
+0.6.16
+
+    INSTALL now runs as 'python INSTALL' to avoid problems specifying
+    the python path.
+
+    Fixed wxremalert to use the defaults in .wxremindrc if no
+    switches are passed on the command line.
+
+    Fixed bug in wxRemAlert affecting spoken messages beginning with
+    a digit.
+
 0.6.15
 
     Fixed bug. Calls to popen2 in wxRemData left 'defunct' process

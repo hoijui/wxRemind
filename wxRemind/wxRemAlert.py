@@ -2,57 +2,35 @@
 # $Id: wxRemAlert.py 14 2006-05-09 12:20:50Z dag $
 import wx
 import sys, os, getopt, datetime, re
-from wxRemConfig import *
-
-# alert types: old sd -> new t
-types = {'00' : 0,
-         '01' : 1,
-         '10' : 2,
-         '11' : 3,
-         '20' : 4,
-         '21' : 5}
+from wxRemConfig import * 
 
 def alert():
-    global alert_type, alert_display
+    global alert_sound, alert_display
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'd:s:t:')
+        opts, args = getopt.getopt(sys.argv[1:], 'd:s:')
     except getopt.GetoptError:
-        print 'options: -d[0,1] -s[0,1,2] -t[0,1,2,3]'
+        print 'options: -d[0,1] -s[0,1,2]'
         sys.exit(2)
 
     # check for command line overrides
-    alert_display = alert_sound = 0
-    alert_display_set = alert_sound_set = alert_type_set = False
     for o, a in opts:
-        if o == "-t":
-            alert_type = int(a)
-            alert_type_set = True
-        elif o == "-d":
+        if o == "-d":
             alert_display = int(a)
-            alert_display_set = True
         elif o == "-s":
             alert_sound = int(a)
-            alert_sound_set = True
-
-    if not alert_type_set:
-        if alert_display_set or alert_sound_set:
-            alert_type = types['%s%s' % (alert_sound, alert_display)]
-        else:
-            # make wave, display the system default
-            alert_type = 3
 
     event_msg = ' '.join(args)
     spoken_msg = "%s " % event_msg
-    if alert_type == 0:
+    if alert_sound == 0 and alert_display == 0:
         sys.exit(0)
 
-    if alert_type in (2,3):
+    if alert_sound == 1:
         os.system("%s %s" % (alert_play, alert_wave))
-    elif alert_type in (4,5):
+    elif alert_sound == 2:
         if event_msg and alert_parsenums:
             # look for three consecutive digits preceeded by a non-digit and
             # followed by either a word boundary or a non-digit
-            regex= re.compile(r'\D(\d{3,3})[\b\D]')
+            regex= re.compile(r'\D?(\d{3,3})[\b\D]')
             nums = re.findall(regex, spoken_msg)
             if len(nums) > 0:
                 for num in nums:
@@ -63,7 +41,7 @@ def alert():
                         # replace the zero with an uppercase o
                         d1 = 'O'
                     # separate the leading digit from the following 2 digits
-                    rep = "%s %s%s" % (d0,d1,d2)
+                    rep = " %s %s%s" % (d0,d1,d2)
                     # replace the original number
                     spoken_msg = re.sub(num, rep, spoken_msg)
                 spoken_msg.strip()
@@ -156,7 +134,7 @@ def alert():
             retCode = dlg.ShowModal()
             dlg.Destroy()
 
-    if alert_type in (1,3,5):
+    if alert_display:
         app = wx.PySimpleApp()
         dlg = wx.MessageDialog(None, "%s" % event_msg, 'wxRemind alert', 
                                 wx.STAY_ON_TOP | wx.OK | wx.ICON_INFORMATION)

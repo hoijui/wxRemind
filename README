@@ -1,6 +1,6 @@
                                     wxRemind
 
-   version 0.6.15 - 2006-06-04
+   version 0.6.16 - 2006-06-12
 
    wxRemind is a graphical front-end to [1]Remind, a remarkably sophisticated
    calendar and alarm system. wxRemind is similar to [2]Wyrd but is based on
@@ -45,7 +45,7 @@
 
    $ cd <path to wxRemind directory>
 
-   $ ./INSTALL
+   $ python INSTALL
 
    and follow the instructions.
 
