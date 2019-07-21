@@ -126,6 +126,7 @@ def alert():
         app = wx.PySimpleApp()
         dlg = wx.MessageDialog(None, "%s" % event_msg, 'wxRemind alert', 
                                 wx.STAY_ON_TOP | wx.OK | wx.ICON_INFORMATION)
+        dlg.SetBackgroundColour(fcolor)
         retCode = dlg.ShowModal()
         dlg.Destroy()
 

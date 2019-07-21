@@ -177,3 +177,11 @@ if not isfile(reminders):
     # trouble, we can't find the reminders file
     raise NameError, "Cannot locate %s." % reminders
 
+
+# set the hex version of bgcolor
+import wx
+app = wx.App()
+cdb = wx.ColourDatabase()
+cobj = cdb.FindColour(bgcolor)
+rgbcolor = (cobj.Red(), cobj.Green(), cobj.Blue())
+hcolor = '#%02x%02x%02x' % rgbcolor

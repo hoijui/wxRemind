@@ -1,5 +1,6 @@
 import wx
 from wxRemHints import Hints
+from wxRemConfig import *
 
 class DataXferValidator(wx.PyValidator):
     def __init__(self, data, key):
@@ -82,6 +83,7 @@ fields, and for date and time substitutions in the message fields. \
             raise NameError, 'unrecognized type: %s' % type 
 
         wx.Dialog.__init__(self, None, -1, "wxRemind: %s" % title, size=(600,400))
+        self.SetBackgroundColour(nfcolor)
 
         # Create the text controls
         about   = wx.StaticText(self, -1, about_txt)

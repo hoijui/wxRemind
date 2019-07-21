@@ -1,11 +1,12 @@
 # $Id: wxRemHelp.py 4 2006-05-08 13:27:14Z dag $
 import wx.html
+from wxRemConfig import hcolor, fcolor, nfcolor, bgcolor
 
 class Help(wx.Dialog):
     text = '''
 <html>
 <body>
-<table bgcolor="#BBDB88" width="100%" cellspacing="0"
+<table bgcolor="%s" width="100%%" cellspacing="0"
 cellpadding="6" border="0">
 <tr>
     <td valign="center" align="center"><b>wxRemind Usage</b></td>
@@ -38,18 +39,17 @@ In event list, previous/next page.</td></tr>
 </small>
 </body>
 </html>
-'''
+''' % (hcolor)
     def __init__(self, parent):
         wx.Dialog.__init__(self, parent, -1, 'wxRemind Usage',
                           size=(580, 580))
-
         html = wx.html.HtmlWindow(self)
         html.SetPage(self.text)
+        html.SetBackgroundColour(fcolor)
         button = wx.Button(self, wx.ID_OK, "OK")
-
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(html, 1, wx.EXPAND|wx.ALL, 5)
         sizer.Add(button, 0, wx.ALIGN_CENTER|wx.ALL, 5)
-
         self.SetSizer(sizer)
+        self.SetBackgroundColour(fcolor)
         self.Layout()

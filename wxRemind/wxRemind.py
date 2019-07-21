@@ -16,8 +16,6 @@ import wxRemEdit
 
 # CONFIGURATION
 from wxRemConfig import *
-
-# set the border styles
 if ec_border == -1:
     BORDER = wx.SUNKEN_BORDER
 elif ec_border == 0:
@@ -25,6 +23,7 @@ elif ec_border == 0:
 elif ec_border == 1:
     BORDER = wx.RAISED_BORDER
 
+# set the border styles
 if sb_border == -1:
     SBORDER = wx.SB_NORMAL
 elif sb_border == 0:
@@ -169,9 +168,12 @@ class MyFrame(wx.Frame):
         vbox2 = wx.BoxSizer(wx.VERTICAL)
         vbox1.Add(self.datebar, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, 4)
         vbox1.Add(self.lc, 1, wx.EXPAND | wx.LEFT | wx.RIGHT, 4)
-        vbox2.Add(self.cal, 0, wx.EXPAND | wx.ALIGN_CENTER | wx.ALL, 4)
-        vbox2.Add(self.tdy, 0, wx.EXPAND | wx.ALIGN_CENTER_VERTICAL | wx.ALL, 6)
-        vbox2.Add(self.clk, 0, wx.EXPAND | wx.ALIGN_CENTER_VERTICAL | wx.ALL, 6)
+        vbox2.Add(self.cal, 0, wx.EXPAND | wx.ALIGN_CENTER |
+                wx.TOP | wx.RIGHT | wx.BOTTOM, 4)
+        vbox2.Add(self.tdy, 0, wx.EXPAND | wx.ALIGN_CENTER_VERTICAL | 
+                wx.TOP | wx.RIGHT | wx.BOTTOM, 4)
+        vbox2.Add(self.clk, 0, wx.EXPAND | wx.ALIGN_CENTER_VERTICAL |
+                wx.TOP | wx.RIGHT | wx.BOTTOM, 4)
         hbox1.Add(vbox1, 1, wx.EXPAND)
         hbox1.Add(vbox2, 0, wx.EXPAND)
         hbox2 = wx.BoxSizer(wx.HORIZONTAL)
@@ -323,6 +325,7 @@ class MyFrame(wx.Frame):
         if target == 'cal':
             self.cal.SetFocus()
             self.calfocus = 1
+            self.detailbar.SetLabel(sb_string)
             self.cal.SetHeaderColours(headercolor,fcolor)
             self.cal.SetBackgroundColour(fcolor)
             self.datebar.SetBackgroundColour(nfcolor)
@@ -362,7 +365,6 @@ class MyFrame(wx.Frame):
                     attr.SetBackgroundColour(nfcolor)
                     self.cal.SetAttr(day,attr)
             if not self.lc.GetSelectedItemCount():
-                # self.lc.SetItemState(self.lc.GetTopItem(), 
                 self.lc.SetItemState(self.lc.GetTopItem(), 
                         wx.LIST_STATE_SELECTED, wx.LIST_STATE_SELECTED)
 
@@ -502,6 +504,7 @@ class MyFrame(wx.Frame):
         dlg = wx.TextEntryDialog(
                 self, 'Please enter case-insensitive search string:', 
                 'Searching from %s' % Data.nextdate, '')
+        dlg.SetBackgroundColour(nfcolor)
         dlg.SetValue("%s" % Data.searchstr)
         if dlg.ShowModal() == wx.ID_OK:
             str = dlg.GetValue()
@@ -529,6 +532,7 @@ class MyFrame(wx.Frame):
                 'No occurances of "%s" were found after %s.' % 
                 (Data.searchstr, Data.nextdate),'Failed Search', 
                 wx.OK | wx.ICON_INFORMATION)
+        dlg.SetBackgroundColour(nfcolor)
         Data.nextdate = ''
         dlg.ShowModal()
         dlg.Destroy()

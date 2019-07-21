@@ -1,15 +1,16 @@
 # $Id: wxRemAbout.py 8 2006-05-08 15:14:25Z dag $
-import wx.html
+import wx, wx.html
 from wxRemVersion import *
+from wxRemConfig import hcolor, fcolor, nfcolor, bgcolor
 
 class About(wx.Dialog):
     text = """
 <html>
 <body>
-<table bgcolor="#BBDB88" width="100%%" cellspacing="0"
+<table bgcolor="%s" width="100%%" cellspacing="6"
 cellpadding="6" border="0">
-<tr>
-    <td valign="center" align="center"><b>wxRemind</b></td>
+<tr valign="center">
+    <td align="center"><b>wxRemind</b></td>
 </tr>
 </table>
 <small>
@@ -48,19 +49,18 @@ Copyright (c) 2006 Daniel A. Graham &lt;daniel.graham@duke.edu&gt;
 </small>
 </body>
 </html>
-""" % (wxRemVersion)
+""" % (hcolor, wxRemVersion)
 
     def __init__(self, parent):
         wx.Dialog.__init__(self, parent, -1, 'About wxRemind',
                           size=(550, 540) )
-
         html = wx.html.HtmlWindow(self)
         html.SetPage(self.text)
+        html.SetBackgroundColour(fcolor)
         button = wx.Button(self, wx.ID_OK, "OK")
-
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(html, 1, wx.EXPAND|wx.ALL, 5)
         sizer.Add(button, 0, wx.ALIGN_CENTER|wx.ALL, 5)
-
         self.SetSizer(sizer)
+        self.SetBackgroundColour(fcolor)
         self.Layout()
