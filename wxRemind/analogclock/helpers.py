@@ -4,6 +4,10 @@
 #   15 Fev 2006, 22:00 GMT-03:00
 # Distributed under the wxWidgets license.
 
+# 1 June 2006: HandSet modified by Daniel A Graham <daniel.graham |at|
+# duke.edu> to fix 'hour hand sticks at 12' problem. Patch submitted to
+# wxPython and module author.
+
 from time import strftime, localtime
 import math
 import wx
@@ -60,8 +64,8 @@ class Element:
 
     def RecalcCoords(self, clocksize, centre, scale):
         pass
-        
-        
+
+
     def GetSize(self):
         return self.size
 
@@ -76,8 +80,8 @@ class Element:
 
     def GetMaxSize(self, scale=1):
         return self.size * scale
-        
-        
+
+
     def GetScale(self):
         return self.scale
 
@@ -146,7 +150,7 @@ class ElementWithDyer(Element):
     def GetShadowColour(self):
         return self.dyer.GetShadowColour()
 
-        
+
     def SetFillColour(self, colour):
         self.dyer.SetFillColour(colour)
 
@@ -157,8 +161,8 @@ class ElementWithDyer(Element):
 
     def SetBorderWidth(self, width):
         self.dyer.SetBorderWidth(width)
-        
-        
+
+
     def SetShadowColour(self, colour):
         self.dyer.SetShadowColour(colour)
 
@@ -262,7 +266,7 @@ class TickPoly(Element):
 
         width = max([x for x, y in polygon])
         height = max([y for x, y in polygon])
-        
+
         return polygon, width, height
 
 
@@ -380,7 +384,7 @@ class TickNone(Element):
 
     def Draw(self, dc, offset=0):
         pass
-        
+
 #----------------------------------------------------------------------
 
 class Dyer:
@@ -477,13 +481,17 @@ class HandSet:
             # Is this hand supposed to be drawn?
             if flags[i]:
                 idx = ends[i]
+                #------------ Start modification -----------------------
                 # Is this the hours hand?
                 if i == 0:
-                    idx = idx * 5 + ends[1] / 12
-                # Adjust idx offset and prevent exceptions on leap seconds.
-                idx = idx - 1
-                if idx < 0 or idx > 59:
+                    idx = idx * 5 + ends[1] / 12 - 1
+                # else prevent exceptions on leap seconds
+                elif idx <= 0 or idx > 60:
                     idx = 59
+                # and adjust idx offset for minutes and non-leap seconds 
+                else:
+                    idx = idx - 1
+                #-------------- End modification -----------------------
                 angle = math.radians(180 - 6 * (idx + 1))
 
                 hand.dyer.Select(dc, shadow)
@@ -591,7 +599,7 @@ class TickSet:
 
     def _draw(self, dc, shadow=False):
         dc.SetFont(self.font)
-        
+
         a_tick = self.ticks[0]
 
         if shadow:

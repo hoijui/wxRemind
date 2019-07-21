@@ -1,3 +1,11 @@
+0.6.11
+
+    New reminder dialogs now invoke an 'Abandon changes?' dialog prior
+    to exiting if a field has been modified.
+
+    Bug fix. Fix for included analogclock in which hour hand would
+    stick on 12. Patch has been submitted to wxPython.
+
 0.6.10
 
     Bug fix. Fixed 'spoken_msg' referenced before assignment in

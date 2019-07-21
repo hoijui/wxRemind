@@ -1,1 +1,1 @@
-wxRemVersion = '0.6.10 2006-05-31'
+wxRemVersion = '0.6.11 2006-06-01'

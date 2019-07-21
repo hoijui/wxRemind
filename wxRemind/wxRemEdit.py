@@ -24,6 +24,7 @@ class DataXferValidator(wx.PyValidator):
             textCtrl.SetSelection(self.data.get(self.key, 0))
         else:
             textCtrl.SetValue(self.data.get(self.key, ""))
+
         return True 
 
     def TransferFromWindow(self):
@@ -100,14 +101,21 @@ fields, and for date and time substitutions in the message fields. \
             alert_l  = wx.StaticText(self, -1, "Alert:")
 
         date_t  = wx.TextCtrl(self, validator=DataXferValidator(data, "date"))
+        self.Bind(wx.EVT_TEXT, self.SetUnsavedChanges, date_t)
         if type == 'f':
             warn_t  = wx.TextCtrl(self, validator=DataXferValidator(data, "warn"))
+            self.Bind(wx.EVT_TEXT, self.SetUnsavedChanges, warn_t)
         if type in ('t', 'a'):
             time_t  = wx.TextCtrl(self, validator=DataXferValidator(data, "time"))
+            self.Bind(wx.EVT_TEXT, self.SetUnsavedChanges, time_t)
             duration_t  = wx.TextCtrl(self, validator=DataXferValidator(data, "dur"))
+            self.Bind(wx.EVT_TEXT, self.SetUnsavedChanges, duration_t)
         msg_t  = wx.TextCtrl(self, validator=DataXferValidator(data, "msg"))
+        self.Bind(wx.EVT_TEXT, self.SetUnsavedChanges, msg_t)
         if type in ('u', 't', 'a'):
             omsg_t = wx.TextCtrl(self, validator=DataXferValidator(data, "omsg"))
+            self.Bind(wx.EVT_TEXT, self.SetUnsavedChanges, omsg_t)
+
         if type == 'a':
             alertList = [
                 'pop-up display plus default sound',
@@ -118,11 +126,13 @@ fields, and for date and time substitutions in the message fields. \
             alert_t = wx.RadioBox(self, -1, "", (20,20), wx.DefaultSize,
                         alertList, 2, wx.RA_SPECIFY_COLS,
                         validator=DataXferValidator(data, "alert"))
+            self.Bind(wx.EVT_RADIOBOX, self.SetUnsavedChanges, alert_t)
 
         # Use standard button IDs
         help = wx.Button(self, wx.ID_HELP)
         self.Bind(wx.EVT_BUTTON, self.OnHelp, help)
         cancel = wx.Button(self, wx.ID_CANCEL)
+        self.Bind(wx.EVT_BUTTON, self.OnCancel, cancel)
         okay   = wx.Button(self, wx.ID_OK)
         okay.SetDefault()
 
@@ -160,9 +170,28 @@ fields, and for date and time substitutions in the message fields. \
         btns.AddButton(cancel)
         btns.Realize()
         sizer.Add(btns, 0, wx.EXPAND|wx.ALL, 5)
+        self.UnsavedChanges = 0
 
         self.SetSizer(sizer)
         sizer.Fit(self)
+
+    def OnCancel(self, event):
+        # There will be 1 modification from pasting the selected date
+        if self.UnsavedChanges > 1:
+            dlg = wx.MessageDialog(self, "Abandon changes?", "Modified entries", 
+                    wx.wx.NO |
+                    wx.wx.YES)
+            dlg.SetBackgroundColour(nfcolor)
+            retval = dlg.ShowModal()
+            dlg.Destroy()
+            if retval == wx.ID_YES:
+                self.EndModal(True)
+        else:
+            self.EndModal(True)
+
+    def SetUnsavedChanges(self, event):
+        self.UnsavedChanges += 1
+        # print "Unsaved changes: %d" % self.UnsavedChanges
 
     def OnHelp(self, event):
         # show the hints page

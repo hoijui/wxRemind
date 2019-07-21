@@ -1,5 +1,7 @@
                                     wxRemind
 
+   version 0.6.11 - 2006-06-01
+
    wxRemind is a graphical front-end to [1]Remind, a remarkably sophisticated
    calendar and alarm system. wxRemind is similar to [2]Wyrd but is based on
    [3]wxPython rather than curses. The display features a calendar and daily
@@ -11,8 +13,6 @@
    hotkeys to quickly access the most common Remind options, allows popup,
    sound and/or spoken alerts and can display a postscript calendar of the
    selected month suitable for printing.
-
-                          version 0.6.10 - 2006-05-31
 
   Requirements
 
