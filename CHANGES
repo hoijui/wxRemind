@@ -1,3 +1,8 @@
+0.6.10
+
+    Bug fix. Fixed 'spoken_msg' referenced before assignment in
+    wxRemAlert.py.
+
 0.6.9
 
     Bug fix. Removed spurious space in wxRemConfig.py that broke

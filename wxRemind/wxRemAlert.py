@@ -20,12 +20,12 @@ def alert():
             alert_sound = int(a)
 
     event_msg = ' '.join(args)
+    spoken_msg = "%s " % event_msg
 
     if alert_sound == 1:
         os.system("%s %s" % (alert_play, alert_wave))
     elif alert_sound == 2:
         if event_msg and alert_parsenums:
-            spoken_msg = "%s " % event_msg
             # look for three consecutive digits preceeded by a non-digit and
             # followed by either a word boundary or a non-digit
             regex= re.compile(r'\D(\d{3,3})[\b\D]')
